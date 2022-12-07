@@ -248,6 +248,7 @@
 
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
+(setq initial-major-mode 'org-mode)
 
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
