@@ -10,7 +10,7 @@
   - [[#define-utility-functions][Define utility functions]]
   - [[#load-machine-local-config][Load machine-local config]]
   - [[#macos-make-sure-that-emacs-uses-the-right-git][macOS: Make sure that Emacs uses the right git]]
-  - [[#straighel][straigh.el]]
+  - [[#straightel][straight.el]]
   - [[#use-package][use-package]]
   - [[#hydra][Hydra]]
   - [[#auto-minor-mode][Auto minor mode]]
@@ -155,7 +155,7 @@
     (push "/usr/local/bin" exec-path))
 #+end_src
 
-** straigh.el
+** straight.el
 https://github.com/radian-software/straight.el
 
 *** Install
