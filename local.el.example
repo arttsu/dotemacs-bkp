@@ -1,0 +1,3 @@
+(setq my/font-height 120)
+
+(setq my/fish-path "/usr/bin/fish")

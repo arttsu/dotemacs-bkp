@@ -1,0 +1,5 @@
+* %(my/capture-prompt "Title" 'title)
+:PROPERTIES:
+:CAPTURED: %U
+:CATEGORY: %(progn title)
+:END:%?

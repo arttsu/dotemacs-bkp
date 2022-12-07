@@ -1,0 +1,6 @@
+* %(my/capture-prompt "Title" 'title)
+:PROPERTIES:
+:CATEGORY: %(progn title)
+:ARCHIVE: %s_archive::* %(progn title)
+:PERMANENT:
+:END:%?

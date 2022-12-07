@@ -1,0 +1,4 @@
+* TODO %^{Title}
+:PROPERTIES:
+:CAPTURED: %U
+:END:%?
