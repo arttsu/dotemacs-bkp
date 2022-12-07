@@ -649,7 +649,7 @@
 
 (defun my/insert-src-heading ()
   (interactive)
-  (org-insert-heading-after-current)
+  (org-insert-heading-respect-content)
   (insert "Block")
   (my/insert-src-block-within-heading))
 
