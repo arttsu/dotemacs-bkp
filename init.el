@@ -118,7 +118,8 @@
   (setq org-outline-path-complete-in-steps nil)
 
   (setq org-refile-targets
-        '((("~/org/planner/personal.org" "~/org/planner/work.org" "~/org/planner/calendar.org" "~/org/planner/someday.org") :level . 1))))
+        '((("~/org/planner/personal.org" "~/org/planner/work.org" "~/org/planner/calendar.org" "~/org/planner/someday.org") :level . 1)
+          (("~/org/planner/inbox.org") :level . 0))))
 
 (defun my/day-agenda (keys title files)
   `(,keys
