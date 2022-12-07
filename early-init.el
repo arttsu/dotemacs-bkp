@@ -1,3 +1,5 @@
 (setq frame-inhibit-implied-resize t)
 
-(add-to-list 'default-frame-alist '(undecorated-round . t))
+(if (equal system-type 'darwin)
+    (add-to-list 'default-frame-alist '(undecorated-round . t))
+  (add-to-list 'default-frame-alist '(undecorated . t)))
