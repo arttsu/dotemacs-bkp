@@ -737,6 +737,17 @@
   (interactive)
   (my/mark-as "CANCELLED"))
 
+(defun my/jump-to-first-heading ()
+  (interactive)
+  (beginning-of-buffer)
+  (when (not (org-at-heading-p))
+    (org-next-visible-heading 1)))
+
+(defun my/jump-to-last-heading ()
+  (interactive)
+  (end-of-buffer)
+  (org-back-to-heading))
+
 (defun my/goto-charseq-end ()
   (let ((line-end (save-excursion (end-of-line) (point))))
     (condition-case nil
@@ -933,6 +944,8 @@
   ("l" #'org-down-element "Down")
   ("s" #'consult-org-heading "Search")
   (";" #'avy-org-goto-heading-timer "Goto")
+  ("<" #'my/jump-to-first-heading "First heading")
+  (">" #'my/jump-to-last-heading "Last heading")
 
   ("<tab>" #'org-cycle "Cycle" :column "Visibility")
   ("S-<tab>" #'org-shifttab "Cycle all")
