@@ -143,6 +143,8 @@
   (setq org-agenda-custom-commands (list (my/day-agenda "p" "Personal agenda" '("~/org/planner/personal.org" "~/org/planner/calendar.org"))
                                          (my/day-agenda "w" "Work agenda" '("~/org/planner/work.org")))))
 
+(use-package gnuplot)
+
 (use-package ob-restclient
   :after org-babel-load-languages
   :config

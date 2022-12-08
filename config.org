@@ -371,6 +371,13 @@ https://orgmode.org/
                                            (my/day-agenda "w" "Work agenda" '("~/org/planner/work.org")))))
 #+end_src
 
+*** gnuplot
+https://github.com/emacs-gnuplot/gnuplot
+
+#+begin_src elisp
+  (use-package gnuplot)
+#+end_src
+
 *** ob-restclient
 https://github.com/alf/ob-restclient.el
 
