@@ -892,6 +892,7 @@
   ("W" #'transpose-frame "Transpose" :color pink :column "Windows")
 
   ("T" #'modus-themes-toggle "Toggle theme" :column "Appearance")
+  ("I" #'org-toggle-inline-images "Toggle images" :color pink)
 
   ("+" #'my/zoom-frame "In" :color pink :column "Zoom")
   ("-" #'my/zoom-frame-out "Out" :color pink)
