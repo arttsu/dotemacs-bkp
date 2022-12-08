@@ -1184,14 +1184,20 @@ http://company-mode.github.io/
                         (point)
                         (my/point-at-end-of-line)))))
 
+  (defun my/seek-to-heading-content ()
+    (let ((line-num-before (line-number-at-pos)))
+      (forward-line)
+      (cond ((= line-num-before (line-number-at-pos)) (crux-smart-open-line nil))
+            ((org-at-heading-p) (crux-smart-open-line-above))
+            ((org-at-planning-p) (my/seek-to-heading-content))
+            ((org-at-drawer-p) (my/seek-to-heading-content))
+            (t nil))))
+
   (defun my/edit-heading-content ()
     (interactive)
     (org-back-to-heading)
     (org-show-entry)
-    (let ((contents-begin (org-element-property :contents-begin (org-element-context))))
-      (if contents-begin
-          (goto-char contents-begin)
-        (crux-smart-open-line nil))))
+    (my/seek-to-heading-content))
 
   (defun my/mark-as (todo-state)
     (save-excursion
