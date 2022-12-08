@@ -1140,6 +1140,7 @@
    ("C-S-<f3>" . #'tab-new)
    ("<f4>" . #'rename-buffer)
    ("C-S-<f4>" . #'tab-rename)
+   ("<f5>" . #'my/cockpit-hydra/body)
    ("<f6>" . #'consult-ripgrep)
    ("M-<f6>" . #'projectile-ripgrep)
    ("<f7>" . #'dired-jump)
