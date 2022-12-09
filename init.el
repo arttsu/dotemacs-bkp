@@ -913,11 +913,6 @@
 
   ("R" #'project-query-replace-regexp "Replace" :column "Project")
 
-  ("h" #'tab-bar-history-back "Tab history back" :color pink :column "History")
-  ("l" #'tab-bar-history-forward "Tab history forward" :color pink)
-  ("j" #'previous-buffer "Previous buffer" :color pink)
-  ("k" #'next-buffer "Next buffer" :color pink)
-
   ("W" #'transpose-frame "Transpose" :color pink :column "Windows")
 
   ("T" #'modus-themes-toggle "Toggle theme" :column "Appearance")
