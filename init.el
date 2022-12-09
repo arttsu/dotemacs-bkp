@@ -887,6 +887,11 @@
 (global-set-key (kbd "M-<f8>") #'project-find-file)
 (global-set-key (kbd "C-S-<f8>") #'tab-switch)
 
+(global-set-key (kbd "<f9>") #'previous-buffer)
+(global-set-key (kbd "C-<f9>") #'next-buffer)
+(global-set-key (kbd "M-<f9>") #'tab-bar-history-back)
+(global-set-key (kbd "C-M-<f9>") #'tab-bar-history-forward)
+
 (global-set-key (kbd "<f11>") #'my/switch-project)
 (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
 
@@ -999,9 +1004,10 @@
   ("C-<return>" #'org-insert-heading-respect-content "Insert heading" :color blue)
   ("'" #'my/edit-nearest-src-block "Edit src block" :color blue)
   ("c" #'my/smart-copy-nearest-src-block "Copy src block" :color blue)
-  ("RET" #'org-return "Insert newline"))
+  ("RET" #'org-return "Insert newline")
+  ("<f5>" #'my/cockpit-hydra/body "Cockpit" :color blue))
 
-(define-key org-mode-map (kbd "<f9>") #'my/org-hydra/body)
+(define-key org-mode-map (kbd "<f5>") #'my/org-hydra/body)
 
 (with-eval-after-load 'hydra
   (defun my-lsp-show-log ()
@@ -1168,6 +1174,10 @@
    ("<f7>" . #'dired-jump)
    ("<f8>" . #'find-file)
    ("C-S-<f8>" . #'tab-switch)
+   ("<f9>" . #'previous-buffer)
+   ("C-<f9>" . #'next-buffer)
+   ("M-<f9>" . #'tab-bar-history-back)
+   ("C-M-<f9>" . #'tab-bar-history-forward)
    ("<f11>" . #'my/switch-project)
    ("<C-S-f11>" . #'my/switch-project-other-tab)
    ("<f12>" . #'vterm)
