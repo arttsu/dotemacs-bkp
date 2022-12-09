@@ -921,7 +921,7 @@
 (defhydra my/notes-hydra (:color blue :foreign-keys warn)
   "Notes\n\n"
 
-  ("d" #'notdeft "Listn" :column "Deft")
+  ("d" #'notdeft "List" :column "Deft")
   ("n" #'notdeft-new-file-named "New")
   ("r" #'notdeft-reindex "Reindex")
 
