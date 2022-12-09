@@ -814,7 +814,8 @@
 
 (defun my/switch-project ()
   (interactive)
-  (call-interactively 'project-switch-project)
+  (let ((dir (project-prompt-project-dir)))
+    (find-file dir))
   (let ((name (-last-item (butlast (s-split "/" (project-root (project-current)))))))
     (tab-rename name))
   (delete-other-windows)
