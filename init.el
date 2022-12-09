@@ -867,6 +867,11 @@
 
 (defun my/org-capture-inbox () (interactive) (org-capture nil "i"))
 
+(defun my/pop-local-mark ()
+  (interactive)
+  (setq current-prefix-arg '(4))
+  (call-interactively 'set-mark-command))
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
@@ -889,8 +894,9 @@
 
 (global-set-key (kbd "<f9>") #'previous-buffer)
 (global-set-key (kbd "C-<f9>") #'next-buffer)
-(global-set-key (kbd "M-<f9>") #'tab-bar-history-back)
-(global-set-key (kbd "C-M-<f9>") #'tab-bar-history-forward)
+(global-set-key (kbd "M-<f9>") #'my/pop-local-mark)
+(global-set-key (kbd "C-M-<f9>") #'pop-global-mark)
+(global-set-key (kbd "C-S-<f9>") #'tab-bar-history-back)
 
 (global-set-key (kbd "<f11>") #'my/switch-project)
 (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
@@ -1176,8 +1182,7 @@
    ("C-S-<f8>" . #'tab-switch)
    ("<f9>" . #'previous-buffer)
    ("C-<f9>" . #'next-buffer)
-   ("M-<f9>" . #'tab-bar-history-back)
-   ("C-M-<f9>" . #'tab-bar-history-forward)
+   ("C-S-<f9>" . #'tab-bar-history-back)
    ("<f11>" . #'my/switch-project)
    ("<C-S-f11>" . #'my/switch-project-other-tab)
    ("<f12>" . #'vterm)
