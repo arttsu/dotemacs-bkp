@@ -812,19 +812,19 @@
     (embark-dwim))
   t)
 
+(defun my/do-switch-project (find-dir-fn)
+  (let ((dir (project-prompt-project-dir)))
+    (funcall find-dir-fn dir))
+  (let ((name (-last-item (butlast (s-split "/" (project-root (project-current)))))))
+    (tab-rename name)))
+
 (defun my/switch-project ()
   (interactive)
-  (let ((dir (project-prompt-project-dir)))
-    (find-file dir))
-  (let ((name (-last-item (butlast (s-split "/" (project-root (project-current)))))))
-    (tab-rename name))
-  (delete-other-windows)
-  (keyboard-quit))
+  (my/do-switch-project 'find-file))
 
 (defun my/switch-project-other-tab ()
   (interactive)
-  (tab-new)
-  (my/switch-project))
+  (my/do-switch-project 'find-file-other-tab))
 
 (defun my/convert-timestamp-to-datetime (timestamp)
   (format-time-string "%Y-%m-%d %H:%M:%S" (seconds-to-time (string-to-number timestamp)) t))

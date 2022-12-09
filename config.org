@@ -1294,19 +1294,19 @@ http://company-mode.github.io/
 
 ** Switching to a project
 #+begin_src elisp
+  (defun my/do-switch-project (find-dir-fn)
+    (let ((dir (project-prompt-project-dir)))
+      (funcall find-dir-fn dir))
+    (let ((name (-last-item (butlast (s-split "/" (project-root (project-current)))))))
+      (tab-rename name)))
+
   (defun my/switch-project ()
     (interactive)
-    (let ((dir (project-prompt-project-dir)))
-      (find-file dir))
-    (let ((name (-last-item (butlast (s-split "/" (project-root (project-current)))))))
-      (tab-rename name))
-    (delete-other-windows)
-    (keyboard-quit))
+    (my/do-switch-project 'find-file))
 
   (defun my/switch-project-other-tab ()
     (interactive)
-    (tab-new)
-    (my/switch-project))
+    (my/do-switch-project 'find-file-other-tab))
 #+end_src
 
 ** Timestamp conversion
