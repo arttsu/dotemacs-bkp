@@ -1013,7 +1013,7 @@
 (with-eval-after-load 'hydra
   (defun my-lsp-show-log ()
     (interactive)
-    (switch-to-buffer "*lsp-log*"))
+    (switch-to-buffer-other-window "*lsp-log*"))
 
   (defhydra my-hydra-lsp (:color blue)
     "LSP\n\n"
