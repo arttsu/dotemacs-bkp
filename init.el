@@ -758,7 +758,6 @@
   (let ((line-end (save-excursion (end-of-line) (point))))
     (condition-case nil
         (progn
-          (message "hello")
           (re-search-forward (rx (or whitespace "(" ")" "[" "]" "{" "}" "\"" "'" "`" ";" "," "=")) line-end)
           (backward-char))
       (error (end-of-line)))))
