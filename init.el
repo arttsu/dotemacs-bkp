@@ -904,6 +904,10 @@
 
 (define-key org-mode-map (kbd "C-:") #'avy-org-goto-heading-timer)
 
+(defun my/open-scratch ()
+  (interactive)
+  (switch-to-buffer-other-window "*scratch*"))
+
 (defhydra my/cockpit-hydra (:color blue :foreign-keys warn)
   "Cockpit\n\n"
 
@@ -911,6 +915,8 @@
   ("S" #'super-save-mode "Toggle autosave")
 
   ("R" #'project-query-replace-regexp "Replace" :column "Project")
+
+  ("<f1>" #'my/open-scratch "Scratch" :column "Buffers")
 
   ("W" #'transpose-frame "Transpose" :color pink :column "Windows")
 
