@@ -237,6 +237,7 @@
   (setq notdeft-directory "~/org/notes")
   (setq notdeft-directories '("~/org/notes" "~/org/zettelkasten"))
   (setq notdeft-new-file-data-function #'my-notdeft-new-file-data)
+  (setq notdeft-xapian-program (expand-file-name "straight/build/notdeft/xapian/notdeft-xapian" user-emacs-directory))
   :config
   (notdeft-install))
 
