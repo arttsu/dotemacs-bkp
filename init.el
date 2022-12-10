@@ -1073,6 +1073,10 @@
 (use-package consult-lsp
   :after (consult lsp))
 
+(use-package yasnippet
+  :config
+  (yas-global-mode +1))
+
 (use-package flycheck
   :init
   (setq flycheck-global-modes '(not org-mode))

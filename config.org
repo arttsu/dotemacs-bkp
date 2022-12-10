@@ -86,6 +86,7 @@
   - [[#hydra-for-lineregion-operations][Hydra for line/region operations]]
 - [[#programming][Programming]]
   - [[#lsp-mode][LSP mode]]
+  - [[#yasnippet][Yasnippet]]
   - [[#flycheck][Flycheck]]
   - [[#ruby][Ruby]]
   - [[#scala][Scala]]
@@ -1594,6 +1595,15 @@ https://github.com/gagbo/consult-lsp
 #+begin_src elisp
   (use-package consult-lsp
     :after (consult lsp))
+#+end_src
+
+** Yasnippet
+https://github.com/joaotavora/yasnippet
+
+#+begin_src elisp
+  (use-package yasnippet
+    :config
+    (yas-global-mode +1))
 #+end_src
 
 ** Flycheck
