@@ -759,11 +759,12 @@
   (let ((line-end (save-excursion (end-of-line) (point))))
     (condition-case nil
         (progn
-          (re-search-forward (rx (or whitespace "(" ")" "[" "]" "{" "}" "\"" "'" "`" ";" "," "=")) line-end)
+          (re-search-forward (rx (or whitespace "(" ")" "[" "]" "{" "}" "\"" "'" "`" ";" "," "=" "|")) line-end)
           (backward-char))
       (error (end-of-line)))))
 
 (defun my/copy-charseq ()
+  (interactive)
   (set-mark-command nil)
   (my/goto-charseq-end)
   (setq last-command nil) ;; never append to the last kill
@@ -916,6 +917,8 @@
   ("S" #'super-save-mode "Toggle autosave")
 
   ("R" #'project-query-replace-regexp "Replace" :column "Project")
+
+  ("n" #'my/copy-charseq "Copy charseq" :column "Quick Actions")
 
   ("<f1>" #'my/open-scratch "Scratch" :column "Buffers")
 
