@@ -1176,6 +1176,8 @@
    :map dirvish-mode-map
    ("<f7>" . dired-jump)))
 
+(use-package pdf-tools)
+
 (use-package magit
   :bind
   (("C-c g" . magit-file-dispatch)

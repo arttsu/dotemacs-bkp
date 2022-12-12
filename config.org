@@ -103,6 +103,7 @@
 - [[#misc][Misc]]
   - [[#dired][Dired]]
   - [[#dirvish][Dirvish]]
+  - [[#pdf-tools][Pdf-tools]]
   - [[#magit][Magit]]
   - [[#vterm][Vterm]]
   - [[#restclient][restclient]]
@@ -1786,6 +1787,13 @@ https://github.com/alexluigit/dirvish
     (("<f7>" . dirvish)
      :map dirvish-mode-map
      ("<f7>" . dired-jump)))
+#+end_src
+
+** Pdf-tools
+https://github.com/vedang/pdf-tools
+
+#+begin_src elisp
+  (use-package pdf-tools)
 #+end_src
 
 ** Magit
