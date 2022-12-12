@@ -102,6 +102,7 @@
   - [[#kmonad][KMonad]]
 - [[#misc][Misc]]
   - [[#dired][Dired]]
+  - [[#dirvish][Dirvish]]
   - [[#magit][Magit]]
   - [[#vterm][Vterm]]
   - [[#restclient][restclient]]
@@ -129,10 +130,19 @@
 3. Install dependencies
    
 ** Dependencies
+
 *** Notdeft
+
 **** Fedora
 #+begin_src shell
   sudo dnf -y install gcc-c++ xapian-core xapian-core-devel tclap
+#+end_src
+
+*** Dirvish
+
+**** Fedora
+#+begin_src shell
+  sudo dnf -y install ImageMagick
 #+end_src
 
 * Prepare to execute the config
@@ -1750,9 +1760,20 @@ https://github.com/kmonad/kbd-mode
     :straight nil
     :demand
     :init
-    (setq dired-dwim-target t)
+    (setq dired-dwim-target t))
+#+end_src
+
+** Dirvish
+https://github.com/alexluigit/dirvish
+
+#+begin_src elisp
+  (use-package dirvish
+    :config
+    (dirvish-override-dired-mode)
     :bind
-    (("<f7>" . dired-jump)))
+    (("<f7>" . dirvish)
+     :map dirvish-mode-map
+     ("<f7>" . dired-jump)))
 #+end_src
 
 ** Magit

@@ -1154,9 +1154,15 @@
   :straight nil
   :demand
   :init
-  (setq dired-dwim-target t)
+  (setq dired-dwim-target t))
+
+(use-package dirvish
+  :config
+  (dirvish-override-dired-mode)
   :bind
-  (("<f7>" . dired-jump)))
+  (("<f7>" . dirvish)
+   :map dirvish-mode-map
+   ("<f7>" . dired-jump)))
 
 (use-package magit
   :bind
