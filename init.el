@@ -501,6 +501,17 @@
     (my/forward-to-src-block)
     (my-smart-copy)))
 
+(defun my/copy-nearest-src-block-results ()
+  (interactive)
+  (save-excursion
+    (org-back-to-heading)
+    (my/forward-to-src-block)
+    (org-babel-open-src-block-result)
+    (switch-to-buffer "*Org Babel Results*")
+    (mark-whole-buffer)
+    (copy-region-as-kill nil nil t)
+    (delete-window)))
+
 (defun my/name-or-rename-nearest-src-block ()
   (interactive)
   (save-excursion
@@ -1014,6 +1025,7 @@
   ("C-<return>" #'org-insert-heading-respect-content "Insert heading" :color blue)
   ("'" #'my/edit-nearest-src-block "Edit src block" :color blue)
   ("c" #'my/smart-copy-nearest-src-block "Copy src block" :color blue)
+  ("M-c" #'my/copy-nearest-src-block-results "Copy src block results" :color blue)
   ("RET" #'org-return "Insert newline")
   ("<f5>" #'my/cockpit-hydra/body "Cockpit" :color blue))
 
