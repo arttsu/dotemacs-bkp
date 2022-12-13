@@ -140,8 +140,11 @@
      (org-agenda-files ',files))))
 
 (with-eval-after-load 'org-agenda
-  (setq org-agenda-custom-commands (list (my/day-agenda "p" "Personal agenda" '("~/org/planner/personal.org" "~/org/planner/calendar.org"))
-                                         (my/day-agenda "w" "Work agenda" '("~/org/planner/work.org")))))
+  (setq org-agenda-custom-commands
+        (list
+         (my/day-agenda "p" "Personal agenda" '("~/org/planner/personal.org" "~/org/planner/calendar.org"))
+         (my/day-agenda "w" "Work agenda" '("~/org/planner/work.org"))
+         '("i" "Inbox" ((todo "TODO")) ((org-agenda-files '("~/org/planner/inbox.org")))))))
 
 (use-package gnuplot)
 
