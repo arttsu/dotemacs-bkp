@@ -887,11 +887,16 @@
   (setq current-prefix-arg '(4))
   (call-interactively 'set-mark-command))
 
+(defun my/kill-current-buffer ()
+  (interactive)
+  (kill-buffer (current-buffer)))
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
 
 (global-set-key (kbd "<f1>") #'delete-window)
+(global-set-key (kbd "C-<f1>") #'my/kill-current-buffer)
 (global-set-key (kbd "C-S-<f1>") #'tab-close)
 
 (global-set-key (kbd "<f2>") #'delete-other-windows)
