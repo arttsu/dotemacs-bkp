@@ -349,6 +349,7 @@
   (add-hook 'scala-mode-hook #'smartparens-mode)
   (add-hook 'python-mode-hook #'smartparens-mode)
   (add-hook 'sql-mode-hook #'smartparens-mode)
+  (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
   :config
   (require 'smartparens-config)
   :bind
@@ -1119,6 +1120,11 @@
   (setq sbt:program-options '("-Dsbt.supershell=false")))
 
 (use-package lsp-metals)
+
+(use-package clojure-mode
+  :config
+  (define-clojure-indent
+   (match 1)))
 
 (use-package tree-sitter
   :config
