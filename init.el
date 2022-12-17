@@ -892,15 +892,37 @@
   (interactive)
   (kill-buffer (current-buffer)))
 
+(defun my/consult-bookmark-other-window ()
+  (interactive)
+  (let ((original-buffer (current-buffer)))
+    (call-interactively 'consult-bookmark)
+    (delete-other-windows)
+    (split-window-right)
+    (switch-to-buffer original-buffer)
+    (other-window 1)))
+
+(defun my/consult-bookmark-other-tab ()
+  (interactive)
+  (let ((original-buffer (current-buffer))
+        (target-buffer (progn
+                     (call-interactively 'consult-bookmark)
+                     (current-buffer))))
+    (switch-to-buffer original-buffer)
+    (tab-new)
+    (switch-to-buffer target-buffer)))
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
 
 (global-set-key (kbd "<f1>") #'delete-window)
 (global-set-key (kbd "C-<f1>") #'my/kill-current-buffer)
+(global-set-key (kbd "M-<f1>") #'delete-other-windows)
 (global-set-key (kbd "C-S-<f1>") #'tab-close)
 
-(global-set-key (kbd "<f2>") #'delete-other-windows)
+(global-set-key (kbd "<f2>") #'consult-bookmark)
+(global-set-key (kbd "C-<f2>") #'my/consult-bookmark-other-window)
+(global-set-key (kbd "C-S-<f2>") #'my/consult-bookmark-other-tab)
 
 (global-set-key (kbd "<f3>") #'split-window-right)
 (global-set-key (kbd "C-<f3>") #'split-window-below)
@@ -913,8 +935,12 @@
 (global-set-key (kbd "<f4>") #'rename-buffer)
 (global-set-key (kbd "C-S-<f4>") #'tab-rename)
 
+(global-set-key (kbd "<f6>") #'consult-ripgrep)
+
 (global-set-key (kbd "<f8>") #'find-file)
+(global-set-key (kbd "C-<f8>") #'consult-buffer)
 (global-set-key (kbd "M-<f8>") #'project-find-file)
+(global-set-key (kbd "C-M-<f8>") #'consult-project-buffer)
 (global-set-key (kbd "C-S-<f8>") #'tab-switch)
 
 (global-set-key (kbd "<f9>") #'previous-buffer)
@@ -928,7 +954,10 @@
 
 (global-set-key (kbd "M-/") #'comment-or-uncomment-region)
 
+(global-set-key (kbd "C-M-s") #'consult-line)
+
 (define-key org-mode-map (kbd "C-:") #'avy-org-goto-heading-timer)
+(define-key org-mode-map (kbd "C-S-s") #'consult-org-heading)
 
 (defun my/open-scratch ()
   (interactive)
@@ -1047,7 +1076,8 @@
 (with-eval-after-load 'hydra
   (defun my-lsp-show-log ()
     (interactive)
-    (switch-to-buffer-other-window "*lsp-log*"))
+    (switch-to-buffer-other-window "*lsp-log*")
+    (end-of-buffer nil))
 
   (defhydra my-hydra-lsp (:color blue)
     "LSP\n\n"
@@ -1158,15 +1188,7 @@
 (use-package consult
   :demand
   :config
-  (recentf-mode)
-  :bind
-  (("<f6>" . #'consult-ripgrep)
-   ("C-<f8>" . #'consult-buffer)
-   ("C-M-<f8>" . #'consult-project-buffer)
-   ("S-<f8>" . #'consult-bookmark)
-   ("C-M-s" . #'consult-line)
-   :map org-mode-map
-   ("C-S-s" . #'consult-org-heading)))
+  (recentf-mode))
 
 (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.cql\\'" . sql-mode))
