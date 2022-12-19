@@ -1612,37 +1612,28 @@ https://magit.vc/
 https://github.com/vterm/vterm
 
 #+begin_src elisp
-    (defun my/vterm-unbind-function-keys ()
-      (local-unset-key (kbd "<f1>"))
-      (local-unset-key (kbd "<f2>"))
-      (local-unset-key (kbd "<f3>"))
-      (local-unset-key (kbd "<f4>"))
-      (local-unset-key (kbd "<f5>"))
-      (local-unset-key (kbd "<f6>"))
-      (local-unset-key (kbd "<f7>"))
-      (local-unset-key (kbd "<f8>"))
-      (local-unset-key (kbd "<f9>"))
-      (local-unset-key (kbd "<f10>"))
-      (local-unset-key (kbd "<f11>"))
-      (local-unset-key (kbd "<f12>")))
+  (defun my/vterm-unbind-function-keys ()
+    (local-unset-key (kbd "<f1>"))
+    (local-unset-key (kbd "<f2>"))
+    (local-unset-key (kbd "<f3>"))
+    (local-unset-key (kbd "<f4>"))
+    (local-unset-key (kbd "<f5>"))
+    (local-unset-key (kbd "<f6>"))
+    (local-unset-key (kbd "<f7>"))
+    (local-unset-key (kbd "<f8>"))
+    (local-unset-key (kbd "<f9>"))
+    (local-unset-key (kbd "<f10>"))
+    (local-unset-key (kbd "<f11>"))
+    (local-unset-key (kbd "<f12>")))
 
-    (use-package vterm
-      :demand
-      :after (dired consult)
-      :init
-      (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-      (setq vterm-shell my/fish-path)
-      :config
-      (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys)
-      :bind
-      (("<f12>" . #'vterm)
-       ("C-<f12>" . #'vterm-other-window)
-       ("C-S-<f12>" . #'my-vterm-new-tab)))
-
-    (defun my-vterm-new-tab ()
-      (interactive)
-      (tab-new)
-      (vterm))
+  (use-package vterm
+    :demand
+    :after (dired consult)
+    :init
+    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+    (setq vterm-shell my/fish-path)
+    :config
+    (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys))
 #+end_src
 
 =my/fish-path= is defined in =local.el=.
@@ -1733,6 +1724,11 @@ https://github.com/olavfosse/eradio
       (tab-new)
       (switch-to-buffer target-buffer)))
 
+  (defun my/vterm-new-tab ()
+    (interactive)
+    (tab-new)
+    (vterm))
+
   (global-set-key (kbd "C-c a") #'org-agenda)
   (global-set-key (kbd "C-c c") #'org-capture)
   (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
@@ -1773,6 +1769,10 @@ https://github.com/olavfosse/eradio
 
   (global-set-key (kbd "<f11>") #'my/switch-project)
   (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
+
+  (global-set-key (kbd "<f12>") #'vterm)
+  (global-set-key (kbd "C-<f12>") #'vterm-other-window)
+  (global-set-key (kbd "C-S-<f12>") #'my/vterm-new-tab)
 
   (global-set-key (kbd "M-/") #'comment-or-uncomment-region)
 

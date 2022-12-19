@@ -1020,16 +1020,7 @@
   (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
   (setq vterm-shell my/fish-path)
   :config
-  (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys)
-  :bind
-  (("<f12>" . #'vterm)
-   ("C-<f12>" . #'vterm-other-window)
-   ("C-S-<f12>" . #'my-vterm-new-tab)))
-
-(defun my-vterm-new-tab ()
-  (interactive)
-  (tab-new)
-  (vterm))
+  (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys))
 
 (use-package restclient
   :config
@@ -1095,6 +1086,11 @@
     (tab-new)
     (switch-to-buffer target-buffer)))
 
+(defun my/vterm-new-tab ()
+  (interactive)
+  (tab-new)
+  (vterm))
+
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
@@ -1135,6 +1131,10 @@
 
 (global-set-key (kbd "<f11>") #'my/switch-project)
 (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
+
+(global-set-key (kbd "<f12>") #'vterm)
+(global-set-key (kbd "C-<f12>") #'vterm-other-window)
+(global-set-key (kbd "C-S-<f12>") #'my/vterm-new-tab)
 
 (global-set-key (kbd "M-/") #'comment-or-uncomment-region)
 
