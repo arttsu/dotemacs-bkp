@@ -836,6 +836,54 @@
     (embark-dwim))
   t)
 
+(defun my/back-to-sexp ()
+  (interactive)
+  (let ((current-sexp (thing-at-point 'sexp)))
+    (if current-sexp
+        (let ((current-point (point)))
+          (backward-sexp)
+          (unless (string= (thing-at-point 'sexp) current-sexp)
+            (goto-char current-point)))
+      (backward-sexp))))
+
+(defun my/jump-upto-sexp ()
+  (interactive)
+  (my/back-to-sexp)
+  (forward-sexp)
+  (forward-sexp)
+  (backward-sexp))
+
+(defun my/jump-back-upto-sexp ()
+  (interactive)
+  (my/back-to-sexp)
+  (backward-sexp)
+  (forward-sexp))
+
+(defun my/kill-upto-sexp ()
+  (interactive)
+  (let ((current-point (point))
+        (before-current-word (save-excursion
+                               (my/back-to-sexp)
+                               (point)))
+        (before-next-word (save-excursion
+                            (my/jump-upto-sexp)
+                            (point))))
+    (unless (= before-current-word before-next-word)
+      (kill-region current-point before-next-word))))
+
+(defun my/kill-back-upto-sexp ()
+  (interactive)
+  (let ((current-point (point))
+        (after-current-sexp (save-excursion
+                              (my/back-to-sexp)
+                              (forward-sexp)
+                              (point)))
+        (after-previous-sexp (save-excursion
+                               (my/jump-back-upto-sexp)
+                               (point))))
+    (unless (= after-current-sexp after-previous-sexp)
+      (kill-region after-previous-sexp current-point))))
+
 (defun my/do-switch-project (find-dir-fn)
   (let ((dir (project-prompt-project-dir)))
     (funcall find-dir-fn dir))
@@ -1142,6 +1190,11 @@
 
 (define-key org-mode-map (kbd "C-:") #'avy-org-goto-heading-timer)
 (define-key org-mode-map (kbd "C-S-s") #'consult-org-heading)
+
+(global-set-key (kbd "C-c j s") #'my/jump-upto-sexp)
+(global-set-key (kbd "C-c j S") #'my/jump-back-upto-sexp)
+(global-set-key (kbd "C-c k s") #'my/kill-upto-sexp)
+(global-set-key (kbd "C-c k S") #'my/kill-back-upto-sexp)
 
 (defun my/open-scratch ()
   (interactive)
