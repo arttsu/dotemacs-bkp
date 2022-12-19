@@ -884,6 +884,54 @@
     (unless (= after-current-sexp after-previous-sexp)
       (kill-region after-previous-sexp current-point))))
 
+(defun my/back-to-word ()
+  (interactive)
+  (let ((current-word (thing-at-point 'word)))
+    (if current-word
+        (let ((current-point (point)))
+          (backward-word)
+          (unless (string= (thing-at-point 'word) current-word)
+            (goto-char current-point)))
+      (backward-word))))
+
+(defun my/jump-upto-word ()
+  (interactive)
+  (my/back-to-word)
+  (forward-word)
+  (forward-word)
+  (backward-word))
+
+(defun my/jump-back-upto-word ()
+  (interactive)
+  (my/back-to-word)
+  (backward-word)
+  (forward-word))
+
+(defun my/kill-upto-word ()
+  (interactive)
+  (let ((current-point (point))
+        (before-current-word (save-excursion
+                               (my/back-to-word)
+                               (point)))
+        (before-next-word (save-excursion
+                            (my/jump-upto-word)
+                            (point))))
+    (unless (= before-current-word before-next-word)
+      (kill-region current-point before-next-word))))
+
+(defun my/kill-back-upto-word ()
+  (interactive)
+  (let ((current-point (point))
+        (after-current-word (save-excursion
+                              (my/back-to-word)
+                              (forward-word)
+                              (point)))
+        (after-previous-word (save-excursion
+                               (my/jump-back-upto-word)
+                               (point))))
+    (unless (= after-current-word after-previous-word)
+      (kill-region after-previous-word current-point))))
+
 (defun my/do-switch-project (find-dir-fn)
   (let ((dir (project-prompt-project-dir)))
     (funcall find-dir-fn dir))
@@ -1195,6 +1243,11 @@
 (global-set-key (kbd "C-c j S") #'my/jump-back-upto-sexp)
 (global-set-key (kbd "C-c k s") #'my/kill-upto-sexp)
 (global-set-key (kbd "C-c k S") #'my/kill-back-upto-sexp)
+
+(global-set-key (kbd "C-c j w") #'my/jump-upto-word)
+(global-set-key (kbd "C-c j W") #'my/jump-back-upto-word)
+(global-set-key (kbd "C-c k w") #'my/kill-upto-word)
+(global-set-key (kbd "C-c k W") #'my/kill-back-upto-word)
 
 (defun my/open-scratch ()
   (interactive)
