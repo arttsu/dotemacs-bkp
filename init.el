@@ -1249,7 +1249,9 @@
 (global-set-key (kbd "C-c k w") #'my/kill-upto-word)
 (global-set-key (kbd "C-c k W") #'my/kill-back-upto-word)
 
-(global-set-key (kbd "C-c k u") #'sp-unwrap-sexp)
+(with-eval-after-load 'smartparens
+  (define-key smartparens-mode-map (kbd "C-c k u") #'sp-unwrap-sexp)
+  (define-key smartparens-strict-mode-map (kbd "C-c k u") #'sp-unwrap-sexp))
 
 (defun my/open-scratch ()
   (interactive)
