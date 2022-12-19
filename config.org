@@ -77,13 +77,6 @@
   - [[#switching-to-a-project][Switching to a project]]
   - [[#timestamp-conversion][Timestamp conversion]]
   - [[#zoom-the-whole-frame][Zoom the whole frame]]
-- [[#global-bindings][Global bindings]]
-- [[#hydras][Hydras]]
-  - [[#cockpit][Cockpit]]
-  - [[#notes][Notes]]
-  - [[#org-cockpit][Org Cockpit]]
-  - [[#lsp-hydra][LSP hydra]]
-  - [[#hydra-for-lineregion-operations][Hydra for line/region operations]]
 - [[#programming][Programming]]
   - [[#lsp-mode][LSP mode]]
   - [[#yasnippet][Yasnippet]]
@@ -112,6 +105,13 @@
   - [[#eradio][eradio]]
 - [[#new-work][New Work]]
   - [[#set-xingbox-base-url][Set xingbox base URL]]
+- [[#global-bindings][Global bindings]]
+- [[#hydras][Hydras]]
+  - [[#cockpit][Cockpit]]
+  - [[#notes][Notes]]
+  - [[#org-cockpit][Org Cockpit]]
+  - [[#lsp-hydra][LSP hydra]]
+  - [[#hydra-for-lineregion-operations][Hydra for line/region operations]]
 
 * README
 :PROPERTIES:
@@ -1233,9 +1233,17 @@ http://company-mode.github.io/
       (org-back-to-heading)
       (org-todo todo-state)))
 
+  (defun my/mark-as-todo ()
+    (interactive)
+    (my/mark-as "TODO"))
+
   (defun my/mark-as-next ()
     (interactive)
     (my/mark-as "NEXT"))
+
+  (defun my/mark-as-waiting ()
+    (interactive)
+    (my/mark-as "WAITING"))
 
   (defun my/mark-as-done ()
     (interactive)
@@ -1383,258 +1391,6 @@ https://stackoverflow.com/questions/24705984/increase-decrease-font-size-in-an-e
   (defun my/zoom-frame-default ()
     (interactive)
     (set-face-attribute 'default (selected-frame) :height my/font-height))
-#+end_src
-
-* Global bindings
-#+begin_src elisp
-  (defun my/org-capture-inbox () (interactive) (org-capture nil "i"))
-
-  (defun my/pop-local-mark ()
-    (interactive)
-    (setq current-prefix-arg '(4))
-    (call-interactively 'set-mark-command))
-
-  (defun my/kill-current-buffer ()
-    (interactive)
-    (kill-buffer (current-buffer)))
-
-  (defun my/consult-bookmark-other-window ()
-    (interactive)
-    (let ((original-buffer (current-buffer)))
-      (call-interactively 'consult-bookmark)
-      (delete-other-windows)
-      (split-window-right)
-      (switch-to-buffer original-buffer)
-      (other-window 1)))
-
-  (defun my/consult-bookmark-other-tab ()
-    (interactive)
-    (let ((original-buffer (current-buffer))
-          (target-buffer (progn
-                       (call-interactively 'consult-bookmark)
-                       (current-buffer))))
-      (switch-to-buffer original-buffer)
-      (tab-new)
-      (switch-to-buffer target-buffer)))
-
-  (global-set-key (kbd "C-c a") #'org-agenda)
-  (global-set-key (kbd "C-c c") #'org-capture)
-  (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
-
-  (global-set-key (kbd "<f1>") #'delete-window)
-  (global-set-key (kbd "C-<f1>") #'my/kill-current-buffer)
-  (global-set-key (kbd "M-<f1>") #'delete-other-windows)
-  (global-set-key (kbd "C-S-<f1>") #'tab-close)
-
-  (global-set-key (kbd "<f2>") #'consult-bookmark)
-  (global-set-key (kbd "C-<f2>") #'my/consult-bookmark-other-window)
-  (global-set-key (kbd "C-S-<f2>") #'my/consult-bookmark-other-tab)
-
-  (global-set-key (kbd "<f3>") #'split-window-right)
-  (global-set-key (kbd "C-<f3>") #'split-window-below)
-  (global-set-key (kbd "M-<f3>") #'find-file-other-window)
-  (global-set-key (kbd "C-M-<f3>") #'switch-to-buffer-other-window)
-  (global-set-key (kbd "S-<f3>") #'find-file-other-tab)
-  (global-set-key (kbd "C-S-<f3>") #'switch-to-buffer-other-tab)
-  (global-set-key (kbd "M-S-<f3>") #'tab-new)
-
-  (global-set-key (kbd "<f4>") #'rename-buffer)
-  (global-set-key (kbd "C-S-<f4>") #'tab-rename)
-
-  (global-set-key (kbd "<f6>") #'consult-ripgrep)
-
-  (global-set-key (kbd "<f8>") #'find-file)
-  (global-set-key (kbd "C-<f8>") #'consult-buffer)
-  (global-set-key (kbd "M-<f8>") #'project-find-file)
-  (global-set-key (kbd "C-M-<f8>") #'consult-project-buffer)
-  (global-set-key (kbd "C-S-<f8>") #'tab-switch)
-
-  (global-set-key (kbd "<f9>") #'previous-buffer)
-  (global-set-key (kbd "C-<f9>") #'next-buffer)
-  (global-set-key (kbd "M-<f9>") #'my/pop-local-mark)
-  (global-set-key (kbd "C-M-<f9>") #'pop-global-mark)
-  (global-set-key (kbd "C-S-<f9>") #'tab-bar-history-back)
-
-  (global-set-key (kbd "<f11>") #'my/switch-project)
-  (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
-
-  (global-set-key (kbd "M-/") #'comment-or-uncomment-region)
-
-  (global-set-key (kbd "C-M-s") #'consult-line)
-
-  (define-key org-mode-map (kbd "C-:") #'avy-org-goto-heading-timer)
-  (define-key org-mode-map (kbd "C-S-s") #'consult-org-heading)
-#+end_src
-
-* Hydras
-
-** Cockpit
-#+begin_src elisp
-  (defun my/open-scratch ()
-    (interactive)
-    (switch-to-buffer-other-window "*scratch*"))
-
-  (defhydra my/cockpit-hydra (:color blue :foreign-keys warn)
-    "Cockpit\n\n"
-
-    ("s" #'my/save-all-buffers "Save all buffers" :column "Files/buffers")
-    ("S" #'super-save-mode "Toggle autosave")
-
-    ("R" #'project-query-replace-regexp "Replace" :column "Project")
-
-    ("n" #'my/copy-charseq "Copy charseq" :column "Quick Actions")
-
-    ("<f1>" #'my/open-scratch "Scratch" :column "Buffers")
-
-    ("W" #'transpose-frame "Transpose" :color pink :column "Windows")
-
-    ("T" #'modus-themes-toggle "Toggle theme" :column "Appearance")
-
-    ("+" #'my/zoom-frame "In" :color pink :column "Zoom")
-    ("-" #'my/zoom-frame-out "Out" :color pink)
-    ("0" #'my/zoom-frame-default "Default" :color pink)
-
-    ("q" #'hydra-keyboard-quit "Quit" :column ""))
-
-  (global-set-key (kbd "<f5>") #'my/cockpit-hydra/body)
-#+end_src
-
-** Notes
-#+begin_src elisp
-  (defhydra my/notes-hydra (:color blue :foreign-keys warn)
-    "Notes\n\n"
-
-    ("d" #'notdeft "List" :column "Deft")
-    ("n" #'notdeft-new-file-named "New")
-    ("r" #'notdeft-reindex "Reindex")
-
-    ("s" #'notdeft-move-into-subdir "Move into subdir" :column "Deft Ops")
-    ("m" #'notdeft-rename-file "Rename")
-    ("k" #'notdeft-delete-file "Delete")
-
-    ("l" #'org-roam-buffer-toggle "Backlinks" :column "Zettelkasten")
-    ("f" #'org-roam-node-find "Find node")
-    ("i" #'org-roam-node-insert "Insert node")
-
-    ("q" #'hydra-keyboard-quit "Quit" :column ""))
-
-  (global-set-key (kbd "C-c n") #'my/notes-hydra/body)
-#+end_src
-
-** Org Cockpit
-#+begin_src elisp
-  (defhydra my/org-hydra (:color pink :foreign-keys warn)
-    "Org\n\n"
-
-    ("j" #'org-next-visible-heading "Next" :column "Movement")
-    ("J" #'org-forward-heading-same-level "Forward")
-    ("k" #'org-previous-visible-heading "Previous")
-    ("K" #'org-backward-heading-same-level "Backward")
-
-    ("h" #'org-up-element "Up" :column "Movement (2)")
-    ("l" #'org-down-element "Down")
-    ("s" #'consult-org-heading "Search")
-    (";" #'avy-org-goto-heading-timer "Goto")
-    ("<" #'my/jump-to-first-heading "First heading")
-    (">" #'my/jump-to-last-heading "Last heading")
-
-    ("<tab>" #'org-cycle "Cycle" :column "Visibility")
-    ("S-<tab>" #'org-shifttab "Cycle all")
-    ("C-l" #'recenter-top-bottom "Recenter")
-    ("v" #'scroll-up-command "Scroll down")
-    ("V" #'scroll-down-command "Scroll up")
-    ("I" #'org-toggle-inline-images "Toggle images")
-
-    ("t" #'org-set-tags-command "Set tags" :column "Heading Ops")
-    ("G" #'my/mark-as-done "Done")
-    ("N" #'my/mark-as-next "Next")
-    ("C" #'my/mark-as-cancelled "Cancelled")
-    ("T" #'org-todo "Todo")
-    ("S" #'org-schedule "Schedule")
-    ("D" #'org-schedule "Deadline")
-
-    ("w" #'org-refile "Refile" :column "Heading Ops (2)")
-    ("r" #'my/rename-heading "Rename")
-    ("A" #'org-archive-subtree-default "Archive")
-    ("W" #'org-cut-subtree "Cut")
-    ("M-w" #'org-copy-subtree "Copy")
-    ("y" #'org-yank "Yank")
-
-    ("M-H" #'org-metaleft "Demote" :column "Heading Ops (3)")
-    ("M-h" #'org-shiftmetaleft "Demote tree")
-    ("M-L" #'org-metaright "Promote")
-    ("M-l" #'org-shiftmetaright "Promote tree")
-    ("M-j" #'org-metadown "Move down")
-    ("M-k" #'org-metaup "Move up")
-
-    ("b" #'my/insert-src-heading "Insert" :column "Src Blocks")
-    ("B" #'my/insert-src-heading-before "Insert before")
-    ("M-b" #'my/duplicate-src-heading "Duplicate")
-    ("M-B" #'my/duplicate-src-heading-before "Duplicate before")
-
-    ("n" #'my/name-or-rename-nearest-src-block "Name or rename" :column "Src Blocks (2)")
-    ("e" #'my/evaluate-nearest-src-block "Evaluate")
-    ("x" #'my/clear-nearest-src-block-results "Clear results")
-    ("X" #'my/clear-all-src-block-results "Clear all results")
-    ("M-'" #'my/edit-nearest-src-block-args "Edit args")
-
-    ("q" #'hydra-keyboard-quit "Quit" :color blue :column "")
-    ("i" #'my/edit-heading-content "Edit heading content" :color blue)
-    ("M-<return>" #'my/insert-heading-before "Insert heading before" :color blue)
-    ("C-<return>" #'org-insert-heading-respect-content "Insert heading" :color blue)
-    ("'" #'my/edit-nearest-src-block "Edit src block" :color blue)
-    ("c" #'my/smart-copy-nearest-src-block "Copy src block" :color blue)
-    ("M-c" #'my/copy-nearest-src-block-results "Copy src block results" :color blue)
-    ("RET" #'org-return "Insert newline")
-    ("<f5>" #'my/cockpit-hydra/body "Cockpit" :color blue))
-
-  (define-key org-mode-map (kbd "<f5>") #'my/org-hydra/body)
-#+end_src
-
-** LSP hydra
-#+begin_src elisp
-  (with-eval-after-load 'hydra
-    (defun my-lsp-show-log ()
-      (interactive)
-      (switch-to-buffer-other-window "*lsp-log*")
-      (end-of-buffer nil))
-
-    (defhydra my-hydra-lsp (:color blue)
-      "LSP\n\n"
-
-      ("l" #'my-lsp-show-log "Show log" :column "Project")
-      ("d" #'consult-lsp-diagnostics "Diagnostics")
-
-      ("s" #'consult-lsp-file-symbols "File symbols" :column "Navigation")
-      ("S" #'consult-lsp-symbols "Symbols")
-      ("r" #'lsp-find-references "Find references")
-
-      ("a" #'lsp-execute-code-action "Execute code action" :column "Code")
-      ("f" #'lsp-format-buffer "Format buffer")
-      ("i" #'lsp-organize-imports "Organize imports"))
-
-    (global-set-key (kbd "C-c l") #'my-hydra-lsp/body))
-#+end_src
-
-** Hydra for line/region operations
-#+begin_src elisp
-  (defhydra my/line-region-ops-hydra (:color blue :foreign-keys warn)
-    "Line/region operations\n\n"
-
-    ("c" #'avy-copy-line "Copy line" :column "Line ops")
-    ("m" #'avy-move-line "Move line")
-    ("k" #'avy-kill-whole-line "Kill line")
-    ("s" #'avy-kill-ring-save-whole-line "Save line")
-
-    ("C" #'avy-copy-region "Copy region" :column "Region ops")
-    ("M" #'avy-move-region "Move region")
-    ("K" #'avy-kill-region "Kill region")
-    ("S" #'avy-kill-ring-save-region "Save region")
-
-    ("d" #'crux-duplicate-current-line-or-region "Duplicate line or region" :color pink :column "Duplication")
-    ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region"))
-
-  (global-set-key (kbd "C-M-;") #'my/line-region-ops-hydra/body)
 #+end_src
 
 * Programming
@@ -1856,47 +1612,37 @@ https://magit.vc/
 https://github.com/vterm/vterm
 
 #+begin_src elisp
-  (use-package vterm
-    :demand
-    :after (dired consult)
-    :init
-    (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-    (setq vterm-shell my/fish-path)
-    :bind
-    (("<f12>" . #'vterm)
-     ("C-<f12>" . #'vterm-other-window)
-     ("C-S-<f12>" . #'my-vterm-new-tab)
-     :map vterm-mode-map
-     ("<f1>" . #'delete-window)
-     ("C-S-<f1>" . #'tab-close)
-     ("<f2>" . #'delete-other-windows)
-     ("<f3>" . #'split-window-right)
-     ("C-<f3>" . #'split-window-below)
-     ("M-<f3>" . #'find-file-other-window)
-     ("C-M-<f3>" . #'switch-to-buffer-other-window)
-     ("S-<f3>" . #'find-file-other-tab)
-     ("C-S-<f3>" . #'switch-to-buffer-other-tab)
-     ("M-S-<f3>" . #'tab-new)
-     ("<f4>" . #'rename-buffer)
-     ("C-S-<f4>" . #'tab-rename)
-     ("<f5>" . #'my/cockpit-hydra/body)
-     ("<f6>" . #'consult-ripgrep)
-     ("M-<f6>" . #'projectile-ripgrep)
-     ("<f7>" . #'dired-jump)
-     ("<f8>" . #'find-file)
-     ("C-S-<f8>" . #'tab-switch)
-     ("<f9>" . #'previous-buffer)
-     ("C-<f9>" . #'next-buffer)
-     ("C-S-<f9>" . #'tab-bar-history-back)
-     ("<f11>" . #'my/switch-project)
-     ("<C-S-f11>" . #'my/switch-project-other-tab)
-     ("<f12>" . #'vterm)
-     ("C-<f12>" . #'vterm-other-window)))
+    (defun my/vterm-unbind-function-keys ()
+      (local-unset-key (kbd "<f1>"))
+      (local-unset-key (kbd "<f2>"))
+      (local-unset-key (kbd "<f3>"))
+      (local-unset-key (kbd "<f4>"))
+      (local-unset-key (kbd "<f5>"))
+      (local-unset-key (kbd "<f6>"))
+      (local-unset-key (kbd "<f7>"))
+      (local-unset-key (kbd "<f8>"))
+      (local-unset-key (kbd "<f9>"))
+      (local-unset-key (kbd "<f10>"))
+      (local-unset-key (kbd "<f11>"))
+      (local-unset-key (kbd "<f12>")))
 
-  (defun my-vterm-new-tab ()
-    (interactive)
-    (tab-new)
-    (vterm))
+    (use-package vterm
+      :demand
+      :after (dired consult)
+      :init
+      (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+      (setq vterm-shell my/fish-path)
+      :config
+      (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys)
+      :bind
+      (("<f12>" . #'vterm)
+       ("C-<f12>" . #'vterm-other-window)
+       ("C-S-<f12>" . #'my-vterm-new-tab)))
+
+    (defun my-vterm-new-tab ()
+      (interactive)
+      (tab-new)
+      (vterm))
 #+end_src
 
 =my/fish-path= is defined in =local.el=.
@@ -1954,3 +1700,257 @@ https://github.com/olavfosse/eradio
         (kill-line)
         (insert (format "  \"%srest\"" new-url)))))
 #+end_src
+
+* Global bindings
+#+begin_src elisp
+  (defun my/org-capture-inbox () (interactive) (org-capture nil "i"))
+
+  (defun my/pop-local-mark ()
+    (interactive)
+    (setq current-prefix-arg '(4))
+    (call-interactively 'set-mark-command))
+
+  (defun my/kill-current-buffer ()
+    (interactive)
+    (kill-buffer (current-buffer)))
+
+  (defun my/consult-bookmark-other-window ()
+    (interactive)
+    (let ((original-buffer (current-buffer)))
+      (call-interactively 'consult-bookmark)
+      (delete-other-windows)
+      (split-window-right)
+      (switch-to-buffer original-buffer)
+      (other-window 1)))
+
+  (defun my/consult-bookmark-other-tab ()
+    (interactive)
+    (let ((original-buffer (current-buffer))
+          (target-buffer (progn
+                       (call-interactively 'consult-bookmark)
+                       (current-buffer))))
+      (switch-to-buffer original-buffer)
+      (tab-new)
+      (switch-to-buffer target-buffer)))
+
+  (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+  (global-set-key (kbd "C-c i") #'my/org-capture-inbox)
+
+  (global-set-key (kbd "<f1>") #'delete-window)
+  (global-set-key (kbd "C-<f1>") #'my/kill-current-buffer)
+  (global-set-key (kbd "M-<f1>") #'delete-other-windows)
+  (global-set-key (kbd "C-S-<f1>") #'tab-close)
+
+  (global-set-key (kbd "<f2>") #'consult-bookmark)
+  (global-set-key (kbd "C-<f2>") #'my/consult-bookmark-other-window)
+  (global-set-key (kbd "C-S-<f2>") #'my/consult-bookmark-other-tab)
+
+  (global-set-key (kbd "<f3>") #'split-window-right)
+  (global-set-key (kbd "C-<f3>") #'split-window-below)
+  (global-set-key (kbd "M-<f3>") #'find-file-other-window)
+  (global-set-key (kbd "C-M-<f3>") #'switch-to-buffer-other-window)
+  (global-set-key (kbd "S-<f3>") #'find-file-other-tab)
+  (global-set-key (kbd "C-S-<f3>") #'switch-to-buffer-other-tab)
+  (global-set-key (kbd "M-S-<f3>") #'tab-new)
+
+  (global-set-key (kbd "<f4>") #'rename-buffer)
+  (global-set-key (kbd "C-S-<f4>") #'tab-rename)
+
+  (global-set-key (kbd "<f6>") #'consult-ripgrep)
+
+  (global-set-key (kbd "<f8>") #'find-file)
+  (global-set-key (kbd "C-<f8>") #'consult-buffer)
+  (global-set-key (kbd "M-<f8>") #'project-find-file)
+  (global-set-key (kbd "C-M-<f8>") #'consult-project-buffer)
+  (global-set-key (kbd "C-S-<f8>") #'tab-switch)
+
+  (global-set-key (kbd "<f9>") #'previous-buffer)
+  (global-set-key (kbd "C-<f9>") #'next-buffer)
+  (global-set-key (kbd "M-<f9>") #'my/pop-local-mark)
+  (global-set-key (kbd "C-M-<f9>") #'pop-global-mark)
+  (global-set-key (kbd "C-S-<f9>") #'tab-bar-history-back)
+
+  (global-set-key (kbd "<f11>") #'my/switch-project)
+  (global-set-key (kbd "C-S-<f11>") #'my/switch-project-other-tab)
+
+  (global-set-key (kbd "M-/") #'comment-or-uncomment-region)
+
+  (global-set-key (kbd "C-M-s") #'consult-line)
+
+  (define-key org-mode-map (kbd "C-:") #'avy-org-goto-heading-timer)
+  (define-key org-mode-map (kbd "C-S-s") #'consult-org-heading)
+#+end_src
+
+* Hydras
+
+** Cockpit
+#+begin_src elisp
+  (defun my/open-scratch ()
+    (interactive)
+    (switch-to-buffer-other-window "*scratch*"))
+
+  (defhydra my/cockpit-hydra (:color blue :foreign-keys warn)
+    "Cockpit\n\n"
+
+    ("s" #'my/save-all-buffers "Save all buffers" :column "Files/buffers")
+    ("S" #'super-save-mode "Toggle autosave")
+
+    ("R" #'project-query-replace-regexp "Replace" :column "Project")
+
+    ("n" #'my/copy-charseq "Copy charseq" :column "Quick Actions")
+
+    ("<f1>" #'my/open-scratch "Scratch" :column "Buffers")
+
+    ("W" #'transpose-frame "Transpose" :color pink :column "Windows")
+
+    ("T" #'modus-themes-toggle "Toggle theme" :column "Appearance")
+
+    ("+" #'my/zoom-frame "In" :color pink :column "Zoom")
+    ("-" #'my/zoom-frame-out "Out" :color pink)
+    ("0" #'my/zoom-frame-default "Default" :color pink)
+
+    ("q" #'hydra-keyboard-quit "Quit" :column ""))
+
+  (global-set-key (kbd "<f5>") #'my/cockpit-hydra/body)
+#+end_src
+
+** Notes
+#+begin_src elisp
+  (defhydra my/notes-hydra (:color blue :foreign-keys warn)
+    "Notes\n\n"
+
+    ("d" #'notdeft "List" :column "Deft")
+    ("n" #'notdeft-new-file-named "New")
+    ("r" #'notdeft-reindex "Reindex")
+
+    ("s" #'notdeft-move-into-subdir "Move into subdir" :column "Deft Ops")
+    ("m" #'notdeft-rename-file "Rename")
+    ("k" #'notdeft-delete-file "Delete")
+
+    ("l" #'org-roam-buffer-toggle "Backlinks" :column "Zettelkasten")
+    ("f" #'org-roam-node-find "Find node")
+    ("i" #'org-roam-node-insert "Insert node")
+
+    ("q" #'hydra-keyboard-quit "Quit" :column ""))
+
+  (global-set-key (kbd "C-c n") #'my/notes-hydra/body)
+#+end_src
+
+** Org Cockpit
+#+begin_src elisp
+  (defhydra my/org-hydra (:color pink :foreign-keys warn)
+    "Org\n\n"
+
+    ("j" #'org-next-visible-heading "Next" :column "Movement")
+    ("J" #'org-forward-heading-same-level "Forward")
+    ("k" #'org-previous-visible-heading "Previous")
+    ("K" #'org-backward-heading-same-level "Backward")
+
+    ("h" #'org-up-element "Up" :column "Movement (2)")
+    ("l" #'org-down-element "Down")
+    ("s" #'consult-org-heading "Search")
+    (";" #'avy-org-goto-heading-timer "Goto")
+    ("<" #'my/jump-to-first-heading "First heading")
+    (">" #'my/jump-to-last-heading "Last heading")
+
+    ("<tab>" #'org-cycle "Cycle" :column "Visibility")
+    ("S-<tab>" #'org-shifttab "Cycle all")
+    ("C-l" #'recenter-top-bottom "Recenter")
+    ("v" #'scroll-up-command "Scroll down")
+    ("V" #'scroll-down-command "Scroll up")
+    ("I" #'org-toggle-inline-images "Toggle images")
+
+    ("T" #'org-set-tags-command "Set tags" :column "Heading Ops")
+    ("tt" #'my/mark-as-todo "Todo")
+    ("tn" #'my/mark-as-next "Next")
+    ("tw" #'my/mark-as-waiting "Waiting" :color blue)
+    ("td" #'my/mark-as-done "Done")
+    ("tc" #'my/mark-as-cancelled "Cancelled" :color blue)
+    ("S" #'org-schedule "Schedule")
+    ("D" #'org-schedule "Deadline")
+
+    ("w" #'org-refile "Refile" :column "Heading Ops (2)")
+    ("r" #'my/rename-heading "Rename")
+    ("A" #'org-archive-subtree-default "Archive")
+    ("W" #'org-cut-subtree "Cut")
+    ("M-w" #'org-copy-subtree "Copy")
+    ("y" #'org-yank "Yank")
+
+    ("M-H" #'org-metaleft "Demote" :column "Heading Ops (3)")
+    ("M-h" #'org-shiftmetaleft "Demote tree")
+    ("M-L" #'org-metaright "Promote")
+    ("M-l" #'org-shiftmetaright "Promote tree")
+    ("M-j" #'org-metadown "Move down")
+    ("M-k" #'org-metaup "Move up")
+
+    ("b" #'my/insert-src-heading "Insert" :column "Src Blocks")
+    ("B" #'my/insert-src-heading-before "Insert before")
+    ("M-b" #'my/duplicate-src-heading "Duplicate")
+    ("M-B" #'my/duplicate-src-heading-before "Duplicate before")
+
+    ("n" #'my/name-or-rename-nearest-src-block "Name or rename" :column "Src Blocks (2)")
+    ("e" #'my/evaluate-nearest-src-block "Evaluate")
+    ("x" #'my/clear-nearest-src-block-results "Clear results")
+    ("X" #'my/clear-all-src-block-results "Clear all results")
+    ("M-'" #'my/edit-nearest-src-block-args "Edit args")
+
+    ("q" #'hydra-keyboard-quit "Quit" :color blue :column "")
+    ("i" #'my/edit-heading-content "Edit heading content" :color blue)
+    ("M-<return>" #'my/insert-heading-before "Insert heading before" :color blue)
+    ("C-<return>" #'org-insert-heading-respect-content "Insert heading" :color blue)
+    ("'" #'my/edit-nearest-src-block "Edit src block" :color blue)
+    ("c" #'my/smart-copy-nearest-src-block "Copy src block" :color blue)
+    ("M-c" #'my/copy-nearest-src-block-results "Copy src block results" :color blue)
+    ("RET" #'org-return "Insert newline")
+    ("<f5>" #'my/cockpit-hydra/body "Cockpit" :color blue))
+
+  (define-key org-mode-map (kbd "<f5>") #'my/org-hydra/body)
+#+end_src
+
+** LSP hydra
+#+begin_src elisp
+  (with-eval-after-load 'hydra
+    (defun my-lsp-show-log ()
+      (interactive)
+      (switch-to-buffer-other-window "*lsp-log*")
+      (end-of-buffer nil))
+
+    (defhydra my-hydra-lsp (:color blue)
+      "LSP\n\n"
+
+      ("l" #'my-lsp-show-log "Show log" :column "Project")
+      ("d" #'consult-lsp-diagnostics "Diagnostics")
+
+      ("s" #'consult-lsp-file-symbols "File symbols" :column "Navigation")
+      ("S" #'consult-lsp-symbols "Symbols")
+      ("r" #'lsp-find-references "Find references")
+
+      ("a" #'lsp-execute-code-action "Execute code action" :column "Code")
+      ("f" #'lsp-format-buffer "Format buffer")
+      ("i" #'lsp-organize-imports "Organize imports"))
+
+    (global-set-key (kbd "C-c l") #'my-hydra-lsp/body))
+#+end_src
+
+** Hydra for line/region operations
+#+begin_src elisp
+  (defhydra my/line-region-ops-hydra (:color blue :foreign-keys warn)
+    "Line/region operations\n\n"
+
+    ("c" #'avy-copy-line "Copy line" :column "Line ops")
+    ("m" #'avy-move-line "Move line")
+    ("k" #'avy-kill-whole-line "Kill line")
+    ("s" #'avy-kill-ring-save-whole-line "Save line")
+
+    ("C" #'avy-copy-region "Copy region" :column "Region ops")
+    ("M" #'avy-move-region "Move region")
+    ("K" #'avy-kill-region "Kill region")
+    ("S" #'avy-kill-ring-save-region "Save region")
+
+    ("d" #'crux-duplicate-current-line-or-region "Duplicate line or region" :color pink :column "Duplication")
+    ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region"))
+
+  (global-set-key (kbd "C-M-;") #'my/line-region-ops-hydra/body)
+#+end_src
+

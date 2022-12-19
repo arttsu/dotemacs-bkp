@@ -747,9 +747,17 @@
     (org-back-to-heading)
     (org-todo todo-state)))
 
+(defun my/mark-as-todo ()
+  (interactive)
+  (my/mark-as "TODO"))
+
 (defun my/mark-as-next ()
   (interactive)
   (my/mark-as "NEXT"))
+
+(defun my/mark-as-waiting ()
+  (interactive)
+  (my/mark-as "WAITING"))
 
 (defun my/mark-as-done ()
   (interactive)
@@ -880,6 +888,182 @@
 (defun my/zoom-frame-default ()
   (interactive)
   (set-face-attribute 'default (selected-frame) :height my/font-height))
+
+(use-package lsp-mode
+  :hook
+  (scala-mode . lsp)
+  (python-mode . lsp)
+  (ruby-mode . lsp)
+  :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ("C-c j" . lsp-find-definition)
+        ([M-down-mouse-1] . mouse-set-point)
+        ([M-mouse-1] . lsp-find-definition)
+        ("<f4>" . lsp-rename)))
+
+(use-package lsp-ui)
+
+(use-package consult-lsp
+  :after (consult lsp))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode +1))
+
+(use-package flycheck
+  :init
+  (setq flycheck-global-modes '(not org-mode))
+  :config
+  (global-flycheck-mode))
+
+(use-package chruby)
+
+(use-package rspec-mode)
+
+(use-package scala-mode
+  :interpreter "scala")
+
+(use-package sbt-mode
+  :commands sbt-start sbt-command
+  :init
+  (setq sbt:program-options '("-Dsbt.supershell=false")))
+
+(use-package lsp-metals)
+
+(use-package clojure-mode
+  :config
+  (define-clojure-indent
+   (match 1)))
+
+(use-package tree-sitter
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs)
+
+(use-package project
+  :straight nil
+  :after (projectile)
+  :config
+  (add-to-list 'project-switch-commands '(project-dired "Dired" "D") t)
+  (add-to-list 'project-switch-commands '(projectile-run-vterm "Vterm" "V") t)
+  (add-to-list 'project-switch-commands '(magit-status "Magit" "G") t))
+
+(use-package projectile
+  :demand
+  :bind
+  (("M-<f12>" . #'projectile-run-vterm)
+   ("M-<f6>" . #'projectile-ripgrep)))
+
+(use-package rg
+  :config
+  (rg-enable-default-bindings))
+
+(use-package consult
+  :demand
+  :config
+  (recentf-mode))
+
+(add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.cql\\'" . sql-mode))
+
+(use-package markdown-mode)
+
+(use-package fish-mode)
+
+(use-package kbd-mode
+  :straight (kbd-mode :type git :host github :repo "kmonad/kbd-mode")
+  :mode "\\.kbd'"
+  :interpreter "kbd")
+
+(use-package dired
+  :straight nil
+  :demand
+  :init
+  (setq dired-dwim-target t))
+
+(use-package dirvish
+  :config
+  (dirvish-override-dired-mode)
+  :bind
+  (("<f7>" . dirvish)
+   :map dirvish-mode-map
+   ("<f7>" . dired-jump)))
+
+(use-package pdf-tools)
+
+(use-package magit
+  :bind
+  (("C-c g" . magit-file-dispatch)
+   ("C-c b" . magit-blame)))
+
+(defun my/vterm-unbind-function-keys ()
+  (local-unset-key (kbd "<f1>"))
+  (local-unset-key (kbd "<f2>"))
+  (local-unset-key (kbd "<f3>"))
+  (local-unset-key (kbd "<f4>"))
+  (local-unset-key (kbd "<f5>"))
+  (local-unset-key (kbd "<f6>"))
+  (local-unset-key (kbd "<f7>"))
+  (local-unset-key (kbd "<f8>"))
+  (local-unset-key (kbd "<f9>"))
+  (local-unset-key (kbd "<f10>"))
+  (local-unset-key (kbd "<f11>"))
+  (local-unset-key (kbd "<f12>")))
+
+(use-package vterm
+  :demand
+  :after (dired consult)
+  :init
+  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
+  (setq vterm-shell my/fish-path)
+  :config
+  (add-hook 'vterm-mode-hook #'my/vterm-unbind-function-keys)
+  :bind
+  (("<f12>" . #'vterm)
+   ("C-<f12>" . #'vterm-other-window)
+   ("C-S-<f12>" . #'my-vterm-new-tab)))
+
+(defun my-vterm-new-tab ()
+  (interactive)
+  (tab-new)
+  (vterm))
+
+(use-package restclient
+  :config
+  (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode)))
+
+(use-package ledger-mode
+  :after org
+  :init
+  (setq ledger-default-date-format "%Y-%m-%d")
+  :config
+  (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period \"this month\" -S amount bal ^Income ^Expenses")
+  (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert --period \"last month\" -S amount bal ^Income ^Expenses"))
+
+(use-package eradio
+  :init
+  (setq eradio-channels '(("DEF CON - soma fm" . "https://somafm.com/defcon256.pls")
+                          ("Deep Space One - soma fm" . "https://somafm.com/deepspaceone.pls")
+                          ("BAGel Radio" . "http://ais-sa3.cdnstream1.com/2606_128.mp3")))
+  (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
+  :bind
+  (("C-c r p" . #'eradio-play)
+   ("C-c r s" . #'eradio-stop)
+   ("C-c r t" . #'eradio-toggle)))
+
+(defun my-set-xingbox-base-url ()
+  (interactive)
+  (let ((new-url (read-string "New xingbox URL: ")))
+    (save-excursion
+      (goto-char 0)
+      (search-forward "#+name: xingbox")
+      (search-forward "rest")
+      (beginning-of-line)
+      (kill-line)
+      (insert (format "  \"%srest\"" new-url)))))
 
 (defun my/org-capture-inbox () (interactive) (org-capture nil "i"))
 
@@ -1028,11 +1212,12 @@
   ("V" #'scroll-down-command "Scroll up")
   ("I" #'org-toggle-inline-images "Toggle images")
 
-  ("t" #'org-set-tags-command "Set tags" :column "Heading Ops")
-  ("G" #'my/mark-as-done "Done")
-  ("N" #'my/mark-as-next "Next")
-  ("C" #'my/mark-as-cancelled "Cancelled")
-  ("T" #'org-todo "Todo")
+  ("T" #'org-set-tags-command "Set tags" :column "Heading Ops")
+  ("tt" #'my/mark-as-todo "Todo")
+  ("tn" #'my/mark-as-next "Next")
+  ("tw" #'my/mark-as-waiting "Waiting" :color blue)
+  ("td" #'my/mark-as-done "Done")
+  ("tc" #'my/mark-as-cancelled "Cancelled" :color blue)
   ("S" #'org-schedule "Schedule")
   ("D" #'org-schedule "Deadline")
 
@@ -1112,189 +1297,3 @@
   ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region"))
 
 (global-set-key (kbd "C-M-;") #'my/line-region-ops-hydra/body)
-
-(use-package lsp-mode
-  :hook
-  (scala-mode . lsp)
-  (python-mode . lsp)
-  (ruby-mode . lsp)
-  :commands lsp
-  :bind
-  (:map lsp-mode-map
-        ("C-c j" . lsp-find-definition)
-        ([M-down-mouse-1] . mouse-set-point)
-        ([M-mouse-1] . lsp-find-definition)
-        ("<f4>" . lsp-rename)))
-
-(use-package lsp-ui)
-
-(use-package consult-lsp
-  :after (consult lsp))
-
-(use-package yasnippet
-  :config
-  (yas-global-mode +1))
-
-(use-package flycheck
-  :init
-  (setq flycheck-global-modes '(not org-mode))
-  :config
-  (global-flycheck-mode))
-
-(use-package chruby)
-
-(use-package rspec-mode)
-
-(use-package scala-mode
-  :interpreter "scala")
-
-(use-package sbt-mode
-  :commands sbt-start sbt-command
-  :init
-  (setq sbt:program-options '("-Dsbt.supershell=false")))
-
-(use-package lsp-metals)
-
-(use-package clojure-mode
-  :config
-  (define-clojure-indent
-   (match 1)))
-
-(use-package tree-sitter
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs)
-
-(use-package project
-  :straight nil
-  :after (projectile)
-  :config
-  (add-to-list 'project-switch-commands '(project-dired "Dired" "D") t)
-  (add-to-list 'project-switch-commands '(projectile-run-vterm "Vterm" "V") t)
-  (add-to-list 'project-switch-commands '(magit-status "Magit" "G") t))
-
-(use-package projectile
-  :demand
-  :bind
-  (("M-<f12>" . #'projectile-run-vterm)
-   ("M-<f6>" . #'projectile-ripgrep)))
-
-(use-package rg
-  :config
-  (rg-enable-default-bindings))
-
-(use-package consult
-  :demand
-  :config
-  (recentf-mode))
-
-(add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
-(add-to-list 'auto-mode-alist '("\\.cql\\'" . sql-mode))
-
-(use-package markdown-mode)
-
-(use-package fish-mode)
-
-(use-package kbd-mode
-  :straight (kbd-mode :type git :host github :repo "kmonad/kbd-mode")
-  :mode "\\.kbd'"
-  :interpreter "kbd")
-
-(use-package dired
-  :straight nil
-  :demand
-  :init
-  (setq dired-dwim-target t))
-
-(use-package dirvish
-  :config
-  (dirvish-override-dired-mode)
-  :bind
-  (("<f7>" . dirvish)
-   :map dirvish-mode-map
-   ("<f7>" . dired-jump)))
-
-(use-package pdf-tools)
-
-(use-package magit
-  :bind
-  (("C-c g" . magit-file-dispatch)
-   ("C-c b" . magit-blame)))
-
-(use-package vterm
-  :demand
-  :after (dired consult)
-  :init
-  (setq vterm-module-cmake-args "-DUSE_SYSTEM_LIBVTERM=no")
-  (setq vterm-shell my/fish-path)
-  :bind
-  (("<f12>" . #'vterm)
-   ("C-<f12>" . #'vterm-other-window)
-   ("C-S-<f12>" . #'my-vterm-new-tab)
-   :map vterm-mode-map
-   ("<f1>" . #'delete-window)
-   ("C-S-<f1>" . #'tab-close)
-   ("<f2>" . #'delete-other-windows)
-   ("<f3>" . #'split-window-right)
-   ("C-<f3>" . #'split-window-below)
-   ("M-<f3>" . #'find-file-other-window)
-   ("C-M-<f3>" . #'switch-to-buffer-other-window)
-   ("S-<f3>" . #'find-file-other-tab)
-   ("C-S-<f3>" . #'switch-to-buffer-other-tab)
-   ("M-S-<f3>" . #'tab-new)
-   ("<f4>" . #'rename-buffer)
-   ("C-S-<f4>" . #'tab-rename)
-   ("<f5>" . #'my/cockpit-hydra/body)
-   ("<f6>" . #'consult-ripgrep)
-   ("M-<f6>" . #'projectile-ripgrep)
-   ("<f7>" . #'dired-jump)
-   ("<f8>" . #'find-file)
-   ("C-S-<f8>" . #'tab-switch)
-   ("<f9>" . #'previous-buffer)
-   ("C-<f9>" . #'next-buffer)
-   ("C-S-<f9>" . #'tab-bar-history-back)
-   ("<f11>" . #'my/switch-project)
-   ("<C-S-f11>" . #'my/switch-project-other-tab)
-   ("<f12>" . #'vterm)
-   ("C-<f12>" . #'vterm-other-window)))
-
-(defun my-vterm-new-tab ()
-  (interactive)
-  (tab-new)
-  (vterm))
-
-(use-package restclient
-  :config
-  (add-to-list 'auto-mode-alist '("\\.http\\'" . restclient-mode)))
-
-(use-package ledger-mode
-  :after org
-  :init
-  (setq ledger-default-date-format "%Y-%m-%d")
-  :config
-  (ledger-reports-add "bal-this-month" "%(binary) -f %(ledger-file) --invert --period \"this month\" -S amount bal ^Income ^Expenses")
-  (ledger-reports-add "bal-last-month" "%(binary) -f %(ledger-file) --invert --period \"last month\" -S amount bal ^Income ^Expenses"))
-
-(use-package eradio
-  :init
-  (setq eradio-channels '(("DEF CON - soma fm" . "https://somafm.com/defcon256.pls")
-                          ("Deep Space One - soma fm" . "https://somafm.com/deepspaceone.pls")
-                          ("BAGel Radio" . "http://ais-sa3.cdnstream1.com/2606_128.mp3")))
-  (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
-  :bind
-  (("C-c r p" . #'eradio-play)
-   ("C-c r s" . #'eradio-stop)
-   ("C-c r t" . #'eradio-toggle)))
-
-(defun my-set-xingbox-base-url ()
-  (interactive)
-  (let ((new-url (read-string "New xingbox URL: ")))
-    (save-excursion
-      (goto-char 0)
-      (search-forward "#+name: xingbox")
-      (search-forward "rest")
-      (beginning-of-line)
-      (kill-line)
-      (insert (format "  \"%srest\"" new-url)))))
