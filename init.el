@@ -1249,6 +1249,8 @@
 (global-set-key (kbd "C-c k w") #'my/kill-upto-word)
 (global-set-key (kbd "C-c k W") #'my/kill-back-upto-word)
 
+(global-set-key (kbd "C-c k u") #'sp-unwrap-sexp)
+
 (defun my/open-scratch ()
   (interactive)
   (switch-to-buffer-other-window "*scratch*"))

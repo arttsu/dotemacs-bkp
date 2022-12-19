@@ -1895,6 +1895,8 @@ https://github.com/olavfosse/eradio
   (global-set-key (kbd "C-c j W") #'my/jump-back-upto-word)
   (global-set-key (kbd "C-c k w") #'my/kill-upto-word)
   (global-set-key (kbd "C-c k W") #'my/kill-back-upto-word)
+
+  (global-set-key (kbd "C-c k u") #'sp-unwrap-sexp)
 #+end_src
 
 * Hydras
