@@ -1321,6 +1321,8 @@
   ("v" #'scroll-up-command "Scroll down")
   ("V" #'scroll-down-command "Scroll up")
   ("I" #'org-toggle-inline-images "Toggle images")
+  ("N" #'org-narrow-to-subtree "Narrow")
+  ("E" #'widen "Widen")
 
   ("T" #'org-set-tags-command "Set tags" :column "Heading Ops")
   ("tt" #'my/mark-as-todo "Todo")
