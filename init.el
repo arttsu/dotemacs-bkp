@@ -119,7 +119,7 @@
 
   (setq org-refile-targets
         '((("~/org/planner/personal.org" "~/org/planner/work.org" "~/org/planner/calendar.org" "~/org/planner/someday.org") :level . 1)
-          (("~/org/planner/inbox.org") :level . 0))))
+          (("~/org/planner/inbox.org" "~/org/planner/reading.org") :level . 0))))
 
 (defun my/day-agenda (keys title files)
   `(,keys
