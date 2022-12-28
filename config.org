@@ -2051,7 +2051,9 @@ https://github.com/olavfosse/eradio
 
       ("a" #'lsp-execute-code-action "Execute code action" :column "Code")
       ("f" #'lsp-format-buffer "Format buffer")
-      ("i" #'lsp-organize-imports "Organize imports"))
+      ("i" #'lsp-organize-imports "Organize imports")
+
+      ("q" #'hydra-keyboard-quit "Quit" :color blue :column ""))
 
     (global-set-key (kbd "C-c l") #'my-hydra-lsp/body))
 #+end_src
@@ -2072,7 +2074,9 @@ https://github.com/olavfosse/eradio
     ("S" #'avy-kill-ring-save-region "Save region")
 
     ("d" #'crux-duplicate-current-line-or-region "Duplicate line or region" :color pink :column "Duplication")
-    ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region"))
+    ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region")
+
+    ("q" #'hydra-keyboard-quit "Quit" :color blue :column ""))
 
   (global-set-key (kbd "C-M-;") #'my/line-region-ops-hydra/body)
 #+end_src
