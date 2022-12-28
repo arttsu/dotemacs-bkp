@@ -993,7 +993,6 @@
   :commands lsp
   :bind
   (:map lsp-mode-map
-        ("C-c j" . lsp-find-definition)
         ([M-down-mouse-1] . mouse-set-point)
         ([M-mouse-1] . lsp-find-definition)
         ("<f4>" . lsp-rename)))
