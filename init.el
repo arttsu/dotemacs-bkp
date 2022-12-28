@@ -1083,7 +1083,7 @@
   :config
   (dirvish-override-dired-mode)
   :bind
-  (("<f7>" . dirvish)
+  (("<f7>" . dired-jump)
    :map dirvish-mode-map
    ("<f7>" . dired-jump)))
 
