@@ -1277,6 +1277,8 @@
   ("-" #'my/zoom-frame-out "Out" :color pink)
   ("0" #'my/zoom-frame-default "Default" :color pink)
 
+  ("l" #'org-store-link "Store link" :color blue :column "Org")
+
   ("q" #'hydra-keyboard-quit "Quit" :column ""))
 
 (global-set-key (kbd "<f5>") #'my/cockpit-hydra/body)
