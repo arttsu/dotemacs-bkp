@@ -641,8 +641,8 @@ https://protesilaos.com/emacs/modus-themes
     (my/apply-theme 'light))
 #+end_src
 
-*** +Src block colors+ (ignored)
-Currently using gray background for all src blocks.
+*** +Src block colors+
+*disabled: Currently using gray background for all src blocks*
 
 #+begin_src elisp :tangle no
   (defun my/add-src-block-color-mappings ()
