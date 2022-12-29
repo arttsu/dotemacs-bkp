@@ -90,7 +90,8 @@
   (setq org-export-copy-to-kill-ring 'if-interactive)
   (setq org-export-with-sub-superscripts '{})
   (setq org-use-sub-superscripts '{})
-  (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto))))
+  (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
+  (setq org-clock-sound "~/.emacs.d/assets/mixkit-attention-bell-ding-586.wav"))
 
 (defvar my/capture-prompt-history nil)
 

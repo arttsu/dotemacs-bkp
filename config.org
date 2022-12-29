@@ -148,6 +148,15 @@
   sudo dnf -y install ImageMagick
 #+end_src
 
+*** Org Clock
+
+**** macOS
+When playing sounds, org clock tries to find =aplay= executable.
+
+#+begin_src shell
+  ln -s /usr/bin/afplay ~/bin/aplay
+#+end_src
+
 * Prepare to execute the config
 
 ** Define utility functions
@@ -318,7 +327,8 @@ https://orgmode.org/
     (setq org-export-copy-to-kill-ring 'if-interactive)
     (setq org-export-with-sub-superscripts '{})
     (setq org-use-sub-superscripts '{})
-    (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto))))
+    (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
+    (setq org-clock-sound "~/.emacs.d/assets/mixkit-attention-bell-ding-586.wav"))
 #+end_src
 
 *** Capture templates
