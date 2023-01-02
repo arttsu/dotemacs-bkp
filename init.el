@@ -351,6 +351,7 @@
   (add-hook 'python-mode-hook #'smartparens-mode)
   (add-hook 'sql-mode-hook #'smartparens-mode)
   (add-hook 'clojure-mode-hook #'smartparens-strict-mode)
+  (add-hook 'ruby-mode-hook #'smartparens-mode)
   :config
   (require 'smartparens-config)
   :bind
