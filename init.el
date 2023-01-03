@@ -1253,7 +1253,17 @@
 
 (with-eval-after-load 'smartparens
   (define-key smartparens-mode-map (kbd "C-c k u") #'sp-unwrap-sexp)
-  (define-key smartparens-strict-mode-map (kbd "C-c k u") #'sp-unwrap-sexp))
+  (define-key smartparens-mode-map (kbd "M-a") #'sp-beginning-of-sexp)
+  (define-key smartparens-mode-map (kbd "M-e") #'sp-end-of-sexp)
+  (define-key smartparens-mode-map (kbd "C-c {") #'sp-backward-down-sexp)
+  (define-key smartparens-mode-map (kbd "C-M-u") #'sp-up-sexp)
+  (define-key smartparens-strict-mode-map (kbd "C-c k u") #'sp-unwrap-sexp)
+  (define-key smartparens-strict-mode-map (kbd "M-a") #'sp-beginning-of-sexp)
+  (define-key smartparens-strict-mode-map (kbd "M-e") #'sp-end-of-sexp)
+  (define-key smartparens-strict-mode-map (kbd "M-j") #'sp-beginning-of-next-sexp)
+  (define-key smartparens-strict-mode-map (kbd "M-k") #'sp-beginning-of-previous-sexp)
+  (define-key smartparens-strict-mode-map (kbd "C-c {") #'sp-backward-down-sexp)
+  (define-key smartparens-strict-mode-map (kbd "C-M-u") #'sp-up-sexp))
 
 (defun my/open-scratch ()
   (interactive)
