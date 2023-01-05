@@ -240,6 +240,7 @@
   :init
   (setq notdeft-directory "~/org/notes")
   (setq notdeft-directories '("~/org/notes" "~/org/zettelkasten"))
+  (setq notdeft-notename-function #'my/notdeft-title-to-filename)
   (setq notdeft-new-file-data-function #'my-notdeft-new-file-data)
   (setq notdeft-xapian-program (expand-file-name "straight/build/notdeft/xapian/notdeft-xapian" user-emacs-directory))
   :config
@@ -253,6 +254,11 @@
                    (notdeft-make-filename notename ext dir)
                  (notdeft-generate-filename ext dir))))
     (cons file (or data (format "#+TITLE: %s" title)))))
+
+(defun my/notdeft-title-to-filename (title)
+  (let ((timestamp (format-time-string "%Y%m%d%H%M%S"))
+        (default-title (notdeft-default-title-to-notename title)))
+    (format "%s-%s" timestamp default-title)))
 
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
