@@ -1429,7 +1429,7 @@
   ("K" #'avy-kill-region "Kill region")
   ("S" #'avy-kill-ring-save-region "Save region")
 
-  ("d" #'crux-duplicate-current-line-or-region "Duplicate line or region" :color pink :column "Duplication")
+  ("d" #'crux-duplicate-current-line-or-region "Duplicate line or region" :column "Duplication")
   ("D" #'crux-duplicate-and-comment-current-line-or-region "Duplicate and comment line or region")
 
   ("q" #'hydra-keyboard-quit "Quit" :color blue :column ""))
