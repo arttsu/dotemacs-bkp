@@ -474,6 +474,11 @@ https://www.emacswiki.org/emacs/Htmlize
   (use-package htmlize)
 #+end_src
 
+*** Org Reveal
+#+begin_src elisp
+  (use-package ox-reveal)
+#+end_src
+
 ** Automatic table of contents
 https://github.com/snosov1/toc-org
 

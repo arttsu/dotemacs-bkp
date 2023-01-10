@@ -181,6 +181,8 @@
 
 (use-package htmlize)
 
+(use-package ox-reveal)
+
 (use-package toc-org
   :hook ((org-mode markdown-mode) . toc-org-mode))
 
