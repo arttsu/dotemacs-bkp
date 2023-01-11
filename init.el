@@ -995,6 +995,49 @@
   (interactive)
   (set-face-attribute 'default (selected-frame) :height my/font-height))
 
+(defconst my/bagel-radio-url "https://onlineradiobox.com/us/bagel/playlist/")
+
+(defun my/onlineradio-bagel-schedule ()
+  (interactive)
+  (my/onlineradio-schedule "Bagel Radio" my/bagel-radio-url))
+
+(defun my/onlineradio-schedule (name url)
+  (interactive)
+  (let ((schedule (with-current-buffer (url-retrieve-synchronously url)
+                    (my/onlineradio-extract-schedule '()))))
+    (with-output-to-temp-buffer (format "*%s*" name)
+      (dolist (pair schedule)
+        (let ((time (nth 0 pair))
+              (song (nth 1 pair)))
+          (princ (format "%s\n      %s\n" (my/decode-entities time) (my/decode-entities song))))))))
+
+(defun my/onlineradio-extract-schedule (schedule)
+  (condition-case nil
+      (let ((time (my/onlineradio-extract-time))
+            (song (my/onlineradio-extract-song)))
+        (my/onlineradio-extract-schedule (cons (list time song) schedule)))
+    (error (reverse schedule))))
+
+(defun my/onlineradio-extract-time ()
+  (search-forward "time--schedule\">")
+  (let ((before (point)))
+    (iy-go-up-to-char 1 ?<)
+    (let ((after (point)))
+      (buffer-substring before after))))
+
+(defun my/onlineradio-extract-song ()
+  (search-forward "track_history_item")
+  (iy-go-to-char 2 ?>)
+  (let ((before (point)))
+    (iy-go-up-to-char 1 ?<)
+    (let ((after (point)))
+      (buffer-substring before after))))
+
+(defun my/decode-entities (html)
+  (with-temp-buffer
+    (save-excursion (insert html))
+    (xml-parse-string)))
+
 (use-package lsp-mode
   :hook
   (scala-mode . lsp)
