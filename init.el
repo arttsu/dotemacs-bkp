@@ -1091,6 +1091,8 @@
 
 (use-package tree-sitter-langs)
 
+(use-package kubel)
+
 (use-package project
   :straight nil
   :after (projectile)

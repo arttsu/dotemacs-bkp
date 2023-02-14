@@ -87,6 +87,7 @@
   - [[#scala][Scala]]
   - [[#clojure-mode][Clojure mode]]
   - [[#tree-sitter][Tree-sitter]]
+  - [[#kubel][Kubel]]
 - [[#projects][Projects]]
   - [[#projectile][Projectile]]
   - [[#ripgrep][Ripgrep]]
@@ -1665,6 +1666,13 @@ https://emacs-tree-sitter.github.io/
     (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
   (use-package tree-sitter-langs)
+#+end_src
+
+** Kubel
+https://github.com/abrochard/kubel
+
+#+begin_src elisp
+  (use-package kubel)
 #+end_src
 
 * Projects
