@@ -1672,7 +1672,11 @@ https://emacs-tree-sitter.github.io/
 https://github.com/abrochard/kubel
 
 #+begin_src elisp
-  (use-package kubel)
+  (use-package kubel
+    :config
+    (kubel-vterm-setup)
+    (advice-add 'kubel-exec-vterm-pod :before (lambda () (setq vterm-shell "/bin/bash")))
+    (advice-add 'kubel-exec-vterm-pod :after (lambda () (setq vterm-shell my/fish-path))))
 #+end_src
 
 * Projects

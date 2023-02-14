@@ -1091,7 +1091,11 @@
 
 (use-package tree-sitter-langs)
 
-(use-package kubel)
+(use-package kubel
+  :config
+  (kubel-vterm-setup)
+  (advice-add 'kubel-exec-vterm-pod :before (lambda () (setq vterm-shell "/bin/bash")))
+  (advice-add 'kubel-exec-vterm-pod :after (lambda () (setq vterm-shell my/fish-path))))
 
 (use-package project
   :straight nil
