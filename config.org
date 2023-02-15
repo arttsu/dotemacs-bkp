@@ -1673,6 +1673,7 @@ https://github.com/abrochard/kubel
 
 #+begin_src elisp
   (use-package kubel
+    :after vterm
     :config
     (kubel-vterm-setup)
     (advice-add 'kubel-exec-vterm-pod :before (lambda () (setq vterm-shell "/bin/bash")))
@@ -1715,9 +1716,7 @@ https://github.com/minad/consult
 
 #+begin_src elisp
   (use-package consult
-    :demand
-    :config
-    (recentf-mode))
+    :demand)
 #+end_src
 
 * Major modes

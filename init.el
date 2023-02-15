@@ -1092,6 +1092,7 @@
 (use-package tree-sitter-langs)
 
 (use-package kubel
+  :after vterm
   :config
   (kubel-vterm-setup)
   (advice-add 'kubel-exec-vterm-pod :before (lambda () (setq vterm-shell "/bin/bash")))
@@ -1116,9 +1117,7 @@
   (rg-enable-default-bindings))
 
 (use-package consult
-  :demand
-  :config
-  (recentf-mode))
+  :demand)
 
 (add-to-list 'auto-mode-alist '("\\.hql\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.cql\\'" . sql-mode))
