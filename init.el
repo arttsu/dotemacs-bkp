@@ -79,12 +79,6 @@
   (setq org-agenda-files '("~/org/planner/personal.org"
                            "~/org/planner/work.org"
                            "~/org/planner/calendar.org"))
-  (setq org-todo-keywords '((sequence "TODO(t)"
-                                      "NEXT(n)"
-                                      "WAITING(w@/!)"
-                                      "|"
-                                      "DONE(d!)"
-                                      "CANCELLED(c@)")))
   (setq org-confirm-babel-evaluate nil)
   (setq org-startup-indented t)
   (setq org-export-copy-to-kill-ring 'if-interactive)
@@ -120,7 +114,7 @@
 
   (setq org-refile-targets
         '((("~/org/planner/personal.org" "~/org/planner/work.org" "~/org/planner/calendar.org" "~/org/planner/someday.org") :level . 1)
-          (("~/org/planner/inbox.org" "~/org/planner/reading.org") :level . 0))))
+          (("~/org/planner/inbox.org" "~/org/planner/reading.org" "~/org/planner/music.org") :level . 0))))
 
 (defun my/day-agenda (keys title files)
   `(,keys
@@ -129,14 +123,7 @@
                  (org-agenda-skip-scheduled-if-done t)
                  (org-agenda-skip-deadline-if-done t)
                  (org-agenda-skip-timestamp-if-done t)))
-     (todo "NEXT" ((org-agenda-overriding-header "NEXT")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-     (todo "WAITING" ((org-agenda-overriding-header "WAITING")
-                      (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-     (todo "TODO" ((org-agenda-overriding-header "TODO")
-                   (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled))))
-     (org-ql-block '(and (level 1) (not (property "PERMANENT")))
-                   ((org-ql-block-header "PROJECTS"))))
+     (todo "TODO" ((org-agenda-overriding-header "TODOs") (org-agenda-skip-function '(org-agenda-skip-entry-if 'deadline 'scheduled)))))
     ((org-agenda-compact-blocks)
      (org-agenda-files ',files))))
 
@@ -761,21 +748,9 @@
   (interactive)
   (my/mark-as "TODO"))
 
-(defun my/mark-as-next ()
-  (interactive)
-  (my/mark-as "NEXT"))
-
-(defun my/mark-as-waiting ()
-  (interactive)
-  (my/mark-as "WAITING"))
-
 (defun my/mark-as-done ()
   (interactive)
   (my/mark-as "DONE"))
-
-(defun my/mark-as-cancelled ()
-  (interactive)
-  (my/mark-as "CANCELLED"))
 
 (defun my/jump-to-first-heading ()
   (interactive)
@@ -1398,10 +1373,7 @@
 
   ("T" #'org-set-tags-command "Set tags" :column "Heading Ops")
   ("tt" #'my/mark-as-todo "Todo")
-  ("tn" #'my/mark-as-next "Next")
-  ("tw" #'my/mark-as-waiting "Waiting" :color blue)
   ("td" #'my/mark-as-done "Done")
-  ("tc" #'my/mark-as-cancelled "Cancelled" :color blue)
   ("S" #'org-schedule "Schedule")
   ("D" #'org-schedule "Deadline")
 
