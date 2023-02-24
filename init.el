@@ -1071,7 +1071,14 @@
   :config
   (kubel-vterm-setup)
   (advice-add 'kubel-exec-vterm-pod :before (lambda () (setq vterm-shell "/bin/bash")))
-  (advice-add 'kubel-exec-vterm-pod :after (lambda () (setq vterm-shell my/fish-path))))
+  (advice-add 'kubel-exec-vterm-pod :after (lambda () (setq vterm-shell my/fish-path)))
+  :bind
+  (:map kubel-mode-map
+        ("n" . next-line)
+        ("p" . previous-line)
+        ("N" . kubel-set-namespace)
+        ("P" . kubel-port-forward-pod)
+        ("s" . tabulated-list-sort)))
 
 (use-package project
   :straight nil
