@@ -1080,6 +1080,16 @@
         ("P" . kubel-port-forward-pod)
         ("s" . tabulated-list-sort)))
 
+(defun my/kubel-set-namespace (namespace)
+  (require 'cl)
+  (flet ((completing-read (&rest args) namespace))
+    (kubel-set-namespace)))
+
+(defun my/kubel-set-context (context)
+  (require 'cl)
+  (flet ((completing-read (&rest args) context))
+    (kubel-set-context)))
+
 (use-package project
   :straight nil
   :after (projectile)
