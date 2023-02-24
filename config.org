@@ -1780,8 +1780,7 @@ https://magit.vc/
 #+begin_src elisp
   (use-package magit
     :bind
-    (("C-c g" . magit-file-dispatch)
-     ("C-c b" . magit-blame)))
+    (("C-c g" . magit-file-dispatch)))
 #+end_src
 
 ** Vterm

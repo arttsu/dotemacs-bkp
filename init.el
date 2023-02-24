@@ -1141,8 +1141,7 @@
 
 (use-package magit
   :bind
-  (("C-c g" . magit-file-dispatch)
-   ("C-c b" . magit-blame)))
+  (("C-c g" . magit-file-dispatch)))
 
 (defun my/vterm-unbind-function-keys ()
   (local-unset-key (kbd "<f1>"))
