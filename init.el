@@ -429,6 +429,20 @@
   (add-to-list 'reverse-im-read-char-include-commands 'org-agenda)
   (reverse-im-mode t))
 
+(use-package whole-line-or-region
+  :config
+  (whole-line-or-region-global-mode)
+  :bind
+  (("M-/" . whole-line-or-region-comment-dwim)
+   :map smartparens-strict-mode-map
+   ("C-w" . my/whole-line-or-region-sp-kill-region)))
+
+;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
+(defun my/whole-line-or-region-sp-kill-region (prefix)
+  "Call `sp-kill-region' on region or PREFIX whole lines."
+  (interactive "*p")
+  (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
+
 (use-package vertico
   :config
   (vertico-mode))
@@ -1286,8 +1300,6 @@
 (global-set-key (kbd "<f12>") #'vterm)
 (global-set-key (kbd "C-<f12>") #'vterm-other-window)
 (global-set-key (kbd "C-S-<f12>") #'my/vterm-new-tab)
-
-(global-set-key (kbd "M-/") #'comment-or-uncomment-region)
 
 (global-set-key (kbd "C-M-s") #'consult-line)
 
