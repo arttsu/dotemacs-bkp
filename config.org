@@ -82,6 +82,7 @@
   - [[#radio-schedule][Radio schedule]]
 - [[#programming][Programming]]
   - [[#lsp-mode][LSP mode]]
+  - [[#eglot][Eglot]]
   - [[#yasnippet][Yasnippet]]
   - [[#flycheck][Flycheck]]
   - [[#ruby][Ruby]]
@@ -1600,6 +1601,19 @@ https://github.com/gagbo/consult-lsp
 #+begin_src elisp
   (use-package consult-lsp
     :after (consult lsp))
+#+end_src
+
+** Eglot
+#+begin_src elisp :tangle no
+  (use-package eglot
+    :straight nil
+    :preface
+    (defun mp-eglot-eldoc ()
+      (setq eldoc-documentation-strategy
+              'eldoc-documentation-compose-eagerly))
+    :init
+    (setq eglot-confirm-server-initiated-edits nil)
+    :hook ((eglot-managed-mode . mp-eglot-eldoc)))
 #+end_src
 
 ** Yasnippet
