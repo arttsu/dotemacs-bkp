@@ -707,6 +707,12 @@
   (move-end-of-line nil)
   (insert " (copy)"))
 
+(defun my/edit-src-block-results ()
+  (interactive)
+  (search-forward "#+RESULTS:")
+  (search-forward "#+BEGIN_SRC")
+  (org-edit-special))
+
 (defun my/insert-heading-before ()
   (interactive)
   (org-back-to-heading)
@@ -1417,6 +1423,7 @@
   ("x" #'my/clear-nearest-src-block-results "Clear results")
   ("X" #'my/clear-all-src-block-results "Clear all results")
   ("M-'" #'my/edit-nearest-src-block-args "Edit args")
+  ("R" #'my/edit-src-block-results "Edit results" :color blue)
 
   ("q" #'hydra-keyboard-quit "Quit" :color blue :column "")
   ("i" #'my/edit-heading-content "Edit heading content" :color blue)
