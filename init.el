@@ -339,6 +339,7 @@
 (global-subword-mode)
 
 (use-package smartparens
+  :after whole-line-or-region
   :init
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook #'smartparens-mode)
@@ -355,11 +356,18 @@
         ("C-<left>" . sp-backward-slurp-sexp)
         ("M-<right>" . sp-forward-barf-sexp)
         ("M-<left>" . sp-backward-barf-sexp)
+        ("C-w" . my/whole-line-or-region-sp-kill-region)
         :map smartparens-mode-map
         ("C-<right>" . sp-forward-slurp-sexp)
         ("C-<left>" . sp-backward-slurp-sexp)
         ("M-<right>" . sp-forward-barf-sexp)
         ("M-<left>" . sp-backward-barf-sexp)))
+
+;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
+(defun my/whole-line-or-region-sp-kill-region (prefix)
+  "Call `sp-kill-region' on region or PREFIX whole lines."
+  (interactive "*p")
+  (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
 
 (defun my/org-unbind-avy-goto ()
   (local-unset-key (kbd "C-'")))
@@ -430,18 +438,11 @@
   (reverse-im-mode t))
 
 (use-package whole-line-or-region
+  :demand
   :config
   (whole-line-or-region-global-mode)
   :bind
-  (("M-/" . whole-line-or-region-comment-dwim)
-   :map smartparens-strict-mode-map
-   ("C-w" . my/whole-line-or-region-sp-kill-region)))
-
-;; https://github.com/purcell/whole-line-or-region/issues/17#issuecomment-781988534
-(defun my/whole-line-or-region-sp-kill-region (prefix)
-  "Call `sp-kill-region' on region or PREFIX whole lines."
-  (interactive "*p")
-  (whole-line-or-region-wrap-beg-end 'sp-kill-region prefix))
+  (("M-/" . whole-line-or-region-comment-dwim)))
 
 (use-package vertico
   :config
