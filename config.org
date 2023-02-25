@@ -1589,6 +1589,9 @@ https://emacs-lsp.github.io/lsp-mode/
           ("<f4>" . lsp-rename)))
 
   (use-package lsp-ui)
+
+  (use-package lsp-metals
+    :after lsp)
 #+end_src
 
 *** Consult-LSP
@@ -1645,7 +1648,6 @@ https://github.com/pezra/rspec-mode
     :init
     (setq sbt:program-options '("-Dsbt.supershell=false")))
 
-  (use-package lsp-metals)
 #+end_src
 
 ** Clojure mode

@@ -1048,6 +1048,9 @@
 
 (use-package lsp-ui)
 
+(use-package lsp-metals
+  :after lsp)
+
 (use-package consult-lsp
   :after (consult lsp))
 
@@ -1072,8 +1075,6 @@
   :commands sbt-start sbt-command
   :init
   (setq sbt:program-options '("-Dsbt.supershell=false")))
-
-(use-package lsp-metals)
 
 (use-package clojure-mode
   :config
