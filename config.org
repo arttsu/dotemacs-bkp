@@ -1576,7 +1576,7 @@ https://stackoverflow.com/questions/24705984/increase-decrease-font-size-in-an-e
 ** LSP mode
 https://emacs-lsp.github.io/lsp-mode/
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package lsp-mode
     :hook
     (scala-mode . lsp)
@@ -1598,22 +1598,70 @@ https://emacs-lsp.github.io/lsp-mode/
 *** Consult-LSP
 https://github.com/gagbo/consult-lsp
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package consult-lsp
     :after (consult lsp))
 #+end_src
 
 ** Eglot
-#+begin_src elisp :tangle no
+#+begin_src elisp
   (use-package eglot
     :straight nil
     :preface
     (defun mp-eglot-eldoc ()
       (setq eldoc-documentation-strategy
-              'eldoc-documentation-compose-eagerly))
+            'eldoc-documentation-compose-eagerly)
+      (setq eldoc-display-functions '(eldoc-display-in-buffer)))
     :init
     (setq eglot-confirm-server-initiated-edits nil)
-    :hook ((eglot-managed-mode . mp-eglot-eldoc)))
+    :hook
+    (eglot-managed-mode . mp-eglot-eldoc)
+    (scala-mode . eglot-ensure)
+    :bind
+    (:map eglot-mode-map
+          ("<f4>" . eglot-rename)))
+
+  (define-key prog-mode-map [M-down-mouse-1] #'mouse-set-point)
+  (define-key prog-mode-map [M-mouse-1] #'xref-find-definitions)
+  (define-key prog-mode-map [M-mouse-3] #'xref-go-back)
+
+  (use-package consult-eglot
+    :after (consult eglot))
+
+  (defmacro arttsu-eglot--fixed-code-action (name kind)
+    "Define NAME to execute KIND code action."
+    `(defun ,name (beg &optional end)
+       ,(format "Execute `%s' code actions between BEG and END." kind)
+       (interactive (eglot--region-bounds))
+       (eglot-code-actions beg end ,kind (interactive-p))))
+
+  (arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-organize-imports "source.organizeImports")
+  (arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-extract "refactor.extract")
+  (arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-inline "refactor.inline")
+  (arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-rewrite "refactor.rewrite")
+  (arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-quickfix "quickfix")
+
+  (with-eval-after-load 'hydra
+    (defhydra arttsu-hydra-lsp (:color blue)
+      "Programming\n\n"
+
+      ("d" #'flymake-show-project-diagnostics "Diagnostics" :column "Workspace")
+      ("S" #'consult-eglot-symbols "Symbols")
+
+      ("a" #'arttsu-eglot-fixed-code-action-quickfix "Quickfix" :column "Act")
+      ("A" #'eglot-code-actions "Code actions")
+
+      ("f" #'eglot-format-buffer "Format buffer" :column "Buffer")
+      ("i" #'arttsu-eglot-fixed-code-action-organize-imports "Organize imports")
+      ("n" #'flymake-goto-next-error "Next error" :color pink)
+      ("p" #'flymake-goto-prev-error "Previous error" :color pink)
+
+      ("q" #'hydra-keyboard-quit "Quit" :column "")
+      ("s" #'my/save-all-buffers "Save all buffers")
+      ("<f5>" #'my/cockpit-hydra/body "Cockpit"))
+
+    (with-eval-after-load 'eglot
+      (define-key eglot-mode-map (kbd "<f5>") #'arttsu-hydra-lsp/body)))
 #+end_src
 
 ** Yasnippet
@@ -1628,7 +1676,7 @@ https://github.com/joaotavora/yasnippet
 ** Flycheck
 https://www.flycheck.org/en/latest/
 
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (use-package flycheck
     :init
     (setq flycheck-global-modes '(not org-mode))
@@ -2154,7 +2202,7 @@ https://github.com/olavfosse/eradio
 #+end_src
 
 ** LSP hydra
-#+begin_src elisp
+#+begin_src elisp :tangle no
   (with-eval-after-load 'hydra
     (defun my-lsp-show-log ()
       (interactive)

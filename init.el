@@ -33,6 +33,8 @@
 
 (setq shell-file-name "/bin/sh")
 
+(setenv "JAVA_HOME" "/Users/artem.tseranu/.asdf/installs/java/adoptopenjdk-11.0.15+10")
+
 (use-package exec-path-from-shell
   :if (my/mac-p)
   :config
@@ -1034,35 +1036,67 @@
     (save-excursion (insert html))
     (xml-parse-string)))
 
-(use-package lsp-mode
+(use-package eglot
+  :straight nil
+  :preface
+  (defun mp-eglot-eldoc ()
+    (setq eldoc-documentation-strategy
+          'eldoc-documentation-compose-eagerly)
+    (setq eldoc-display-functions '(eldoc-display-in-buffer)))
+  :init
+  (setq eglot-confirm-server-initiated-edits nil)
   :hook
-  (scala-mode . lsp)
-  (python-mode . lsp)
-  (ruby-mode . lsp)
-  :commands lsp
+  (eglot-managed-mode . mp-eglot-eldoc)
+  (scala-mode . eglot-ensure)
   :bind
-  (:map lsp-mode-map
-        ([M-down-mouse-1] . mouse-set-point)
-        ([M-mouse-1] . lsp-find-definition)
-        ("<f4>" . lsp-rename)))
+  (:map eglot-mode-map
+        ("<f4>" . eglot-rename)))
 
-(use-package lsp-ui)
+(define-key prog-mode-map [M-down-mouse-1] #'mouse-set-point)
+(define-key prog-mode-map [M-mouse-1] #'xref-find-definitions)
+(define-key prog-mode-map [M-mouse-3] #'xref-go-back)
 
-(use-package lsp-metals
-  :after lsp)
+(use-package consult-eglot
+  :after (consult eglot))
 
-(use-package consult-lsp
-  :after (consult lsp))
+(defmacro arttsu-eglot--fixed-code-action (name kind)
+  "Define NAME to execute KIND code action."
+  `(defun ,name (beg &optional end)
+     ,(format "Execute `%s' code actions between BEG and END." kind)
+     (interactive (eglot--region-bounds))
+     (eglot-code-actions beg end ,kind (interactive-p))))
+
+(arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-organize-imports "source.organizeImports")
+(arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-extract "refactor.extract")
+(arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-inline "refactor.inline")
+(arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-rewrite "refactor.rewrite")
+(arttsu-eglot--fixed-code-action arttsu-eglot-fixed-code-action-quickfix "quickfix")
+
+(with-eval-after-load 'hydra
+  (defhydra arttsu-hydra-lsp (:color blue)
+    "Programming\n\n"
+
+    ("d" #'flymake-show-project-diagnostics "Diagnostics" :column "Workspace")
+    ("S" #'consult-eglot-symbols "Symbols")
+
+    ("a" #'arttsu-eglot-fixed-code-action-quickfix "Quickfix" :column "Act")
+    ("A" #'eglot-code-actions "Code actions")
+
+    ("f" #'eglot-format-buffer "Format buffer" :column "Buffer")
+    ("i" #'arttsu-eglot-fixed-code-action-organize-imports "Organize imports")
+    ("n" #'flymake-goto-next-error "Next error" :color pink)
+    ("p" #'flymake-goto-prev-error "Previous error" :color pink)
+
+    ("q" #'hydra-keyboard-quit "Quit" :column "")
+    ("s" #'my/save-all-buffers "Save all buffers")
+    ("<f5>" #'my/cockpit-hydra/body "Cockpit"))
+
+  (with-eval-after-load 'eglot
+    (define-key eglot-mode-map (kbd "<f5>") #'arttsu-hydra-lsp/body)))
 
 (use-package yasnippet
   :config
   (yas-global-mode +1))
-
-(use-package flycheck
-  :init
-  (setq flycheck-global-modes '(not org-mode))
-  :config
-  (global-flycheck-mode))
 
 (use-package chruby)
 
@@ -1450,30 +1484,6 @@
   ("<f5>" #'my/cockpit-hydra/body "Cockpit" :color blue))
 
 (define-key org-mode-map (kbd "<f5>") #'my/org-hydra/body)
-
-(with-eval-after-load 'hydra
-  (defun my-lsp-show-log ()
-    (interactive)
-    (switch-to-buffer-other-window "*lsp-log*")
-    (end-of-buffer nil))
-
-  (defhydra my-hydra-lsp (:color blue)
-    "LSP\n\n"
-
-    ("l" #'my-lsp-show-log "Show log" :column "Project")
-    ("d" #'consult-lsp-diagnostics "Diagnostics")
-
-    ("s" #'consult-lsp-file-symbols "File symbols" :column "Navigation")
-    ("S" #'consult-lsp-symbols "Symbols")
-    ("r" #'lsp-find-references "Find references")
-
-    ("a" #'lsp-execute-code-action "Execute code action" :column "Code")
-    ("f" #'lsp-format-buffer "Format buffer")
-    ("i" #'lsp-organize-imports "Organize imports")
-
-    ("q" #'hydra-keyboard-quit "Quit" :color blue :column ""))
-
-  (global-set-key (kbd "C-c l") #'my-hydra-lsp/body))
 
 (defhydra my/line-region-ops-hydra (:color blue :foreign-keys warn)
   "Line/region operations\n\n"
