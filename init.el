@@ -33,8 +33,6 @@
 
 (setq shell-file-name "/bin/sh")
 
-(setenv "JAVA_HOME" "/Users/artem.tseranu/.asdf/installs/java/adoptopenjdk-11.0.15+10")
-
 (use-package exec-path-from-shell
   :if (my/mac-p)
   :config
@@ -1041,8 +1039,7 @@
   :preface
   (defun mp-eglot-eldoc ()
     (setq eldoc-documentation-strategy
-          'eldoc-documentation-compose-eagerly)
-    (setq eldoc-display-functions '(eldoc-display-in-buffer)))
+          'eldoc-documentation-compose-eagerly))
   :init
   (setq eglot-confirm-server-initiated-edits nil)
   :hook
@@ -1078,6 +1075,8 @@
 
     ("d" #'flymake-show-project-diagnostics "Diagnostics" :column "Workspace")
     ("S" #'consult-eglot-symbols "Symbols")
+    ("E" #'eglot-events-buffer "Events")
+    ("R" #'eglot-reconnect "Reconnect")
 
     ("a" #'arttsu-eglot-fixed-code-action-quickfix "Quickfix" :column "Act")
     ("A" #'eglot-code-actions "Code actions")
@@ -1087,12 +1086,17 @@
     ("n" #'flymake-goto-next-error "Next error" :color pink)
     ("p" #'flymake-goto-prev-error "Previous error" :color pink)
 
+    ("mn" #'smerge-vc-next-conflict "Next conflict" :column "Merge" :color pink)
+    ("mu" #'smerge-keep-upper "Keep upper" :color pink)
+    ("ml" #'smerge-keep-lower "Keep lower" :color pink)
+    ("ma" #'smerge-keep-all "Keep all" :color pink)
+
     ("q" #'hydra-keyboard-quit "Quit" :column "")
     ("s" #'my/save-all-buffers "Save all buffers")
     ("<f5>" #'my/cockpit-hydra/body "Cockpit"))
 
   (with-eval-after-load 'eglot
-    (define-key eglot-mode-map (kbd "<f5>") #'arttsu-hydra-lsp/body)))
+    (define-key prog-mode-map (kbd "<f5>") #'arttsu-hydra-lsp/body)))
 
 (use-package yasnippet
   :config
