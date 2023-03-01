@@ -1138,6 +1138,10 @@ http://company-mode.github.io/
           (move-beginning-of-line nil)
           (kill-line)
           (insert (format "%s %s" block-beg new-args))))))
+
+  (defun arttsu-temporary-buffer ()
+    (interactive)
+    (switch-to-buffer-other-window (make-temp-name "temp-")))
 #+end_src
 
 ** Smart copy

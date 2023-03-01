@@ -640,6 +640,10 @@
         (kill-line)
         (insert (format "%s %s" block-beg new-args))))))
 
+(defun arttsu-temporary-buffer ()
+  (interactive)
+  (switch-to-buffer-other-window (make-temp-name "temp-")))
+
 (defun my-copy-src-message (src)
   (let ((lines (split-string src "\n")))
     (if (> (length lines) 2)
