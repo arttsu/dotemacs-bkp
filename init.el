@@ -60,6 +60,7 @@
   :init
   (setq super-save-auto-save-when-idle t)
   (setq auto-save-default nil)
+  (setq super-save-exclude '(".sbt" "project/"))
   :config
   (add-to-list 'super-save-triggers 'find-file)
   (add-to-list 'super-save-triggers 'ace-window)
