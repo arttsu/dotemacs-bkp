@@ -1589,7 +1589,7 @@ https://stackoverflow.com/questions/24705984/increase-decrease-font-size-in-an-e
 ** LSP mode
 https://emacs-lsp.github.io/lsp-mode/
 
-#+begin_src elisp :tangle no
+#+begin_src elisp
   (use-package lsp-mode
     :hook
     (scala-mode . lsp)
@@ -1600,6 +1600,7 @@ https://emacs-lsp.github.io/lsp-mode/
     (:map lsp-mode-map
           ([M-down-mouse-1] . mouse-set-point)
           ([M-mouse-1] . lsp-find-definition)
+          ([M-mouse-3] . xref-go-back)
           ("<f4>" . lsp-rename)))
 
   (use-package lsp-ui)
@@ -1611,13 +1612,48 @@ https://emacs-lsp.github.io/lsp-mode/
 *** Consult-LSP
 https://github.com/gagbo/consult-lsp
 
-#+begin_src elisp :tangle no
+#+begin_src elisp
   (use-package consult-lsp
     :after (consult lsp))
 #+end_src
 
-** Eglot
+*** Hydra
 #+begin_src elisp
+  (with-eval-after-load 'hydra
+    (defhydra arttsu-programming-hydra (:color blue)
+      "Programming\n\n"
+
+      ("l" #'arttsu-lsp-show-log "Show log" :column "LSP")
+
+      ("M" #'smerge-vc-next-conflict "Next conflict" :column "Merge" :color pink)
+      ("U" #'smerge-keep-upper "Keep upper" :color pink)
+      ("L" #'smerge-keep-lower "Keep lower" :color pink)
+      ("A" #'smerge-keep-all "Keep all" :color pink)
+
+      ("d" #'consult-lsp-diagnostics "Diagnostics" :column "Project")
+
+      ("S" #'consult-lsp-symbols "Symbols" :column "Navigation")
+      ("r" #'lsp-find-references "Find references")
+
+      ("a" #'lsp-execute-code-action "Code action" :column "Code")
+      ("f" #'lsp-format-buffer "Format buffer")
+      ("i" #'lsp-organize-imports "Organize imports")
+
+      ("q" #'hydra-keyboard-quit "Quit" :column "")
+      ("s" #'my/save-all-buffers "Save all buffers")
+      ("<f5>" #'my/cockpit-hydra/body "Cockpit"))
+
+    (define-key prog-mode-map (kbd "<f5>") #'arttsu-programming-hydra/body)
+    (define-key magit-mode-map (kbd "<f5>") #'arttsu-programming-hydra/body))
+
+  (defun arttsu-lsp-show-log ()
+    (interactive)
+    (switch-to-buffer-other-window "*lsp-log*")
+    (end-of-buffer nil))
+#+end_src
+
+** Eglot
+#+begin_src elisp :tangle no
   (use-package eglot
     :straight nil
     :preface
