@@ -249,6 +249,8 @@
         (default-title (notdeft-default-title-to-notename title)))
     (format "%s-%s" timestamp default-title)))
 
+(use-package org-bookmark-heading)
+
 (setq inhibit-startup-screen t)
 (setq initial-scratch-message nil)
 (setq initial-major-mode 'org-mode)

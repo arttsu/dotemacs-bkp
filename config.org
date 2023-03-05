@@ -31,6 +31,7 @@
   - [[#automatic-table-of-contents][Automatic table of contents]]
   - [[#anki][Anki]]
   - [[#notdeft][Notdeft]]
+  - [[#bookmark-heading][Bookmark heading]]
 - [[#ui][UI]]
   - [[#startup][Startup]]
   - [[#hide-unnecessary-ui-elements][Hide unnecessary UI elements]]
@@ -567,6 +568,13 @@ https://github.com/hasu/notdeft
     (let ((timestamp (format-time-string "%Y%m%d%H%M%S"))
           (default-title (notdeft-default-title-to-notename title)))
       (format "%s-%s" timestamp default-title)))
+#+end_src
+
+** Bookmark heading
+https://github.com/alphapapa/org-bookmark-heading
+
+#+begin_src elisp
+  (use-package org-bookmark-heading)
 #+end_src
 
 * UI
