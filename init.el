@@ -1087,7 +1087,9 @@
     ("<f5>" #'my/cockpit-hydra/body "Cockpit"))
 
   (define-key prog-mode-map (kbd "<f5>") #'arttsu-programming-hydra/body)
-  (define-key magit-mode-map (kbd "<f5>") #'arttsu-programming-hydra/body))
+
+  (with-eval-after-load 'magit
+    (define-key magit-mode-map (kbd "<f5>") #'arttsu-programming-hydra/body)))
 
 (defun arttsu-lsp-show-log ()
   (interactive)
