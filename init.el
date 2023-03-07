@@ -339,7 +339,9 @@
   :custom
   (blamer-idle-time 0.5)
   (blamer-min-offset 70)
-  (blamer-max-lines 10))
+  (blamer-max-lines 10)
+  :config
+  (global-blamer-mode))
 
 (defun blamer-callback-show-commit-diff (commit-info)
   (interactive)
