@@ -341,6 +341,27 @@
   (blamer-min-offset 70)
   (blamer-max-lines 10))
 
+(defun blamer-callback-show-commit-diff (commit-info)
+  (interactive)
+  (let ((commit-hash (plist-get commit-info :commit-hash)))
+    (when commit-hash
+      (magit-show-commit commit-hash))))
+
+(defun blamer-callback-magit-log-file (commit-info)
+  (interactive)
+  (magit-log-buffer-file)
+  (let ((commit-hash (plist-get commit-info :commit-hash)))
+    (when commit-hash
+      (run-with-idle-timer 1 nil (lambda (commit-hash)
+                                   (goto-char (point-min))
+                                   (search-forward (substring commit-hash 0 7))
+                                   (set-mark (point-at-bol))
+                                   (goto-char (point-at-eol)))
+                           commit-hash))))
+
+(setq blamer-bindings '(("<mouse-3>" . blamer-callback-magit-log-file)
+                        ("<mouse-1>" . blamer-callback-show-commit-diff)))
+
 (setq require-final-newline t)
 
 (setq-default indent-tabs-mode nil)
