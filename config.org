@@ -48,6 +48,7 @@
   - [[#neotree][Neotree]]
   - [[#toggle][Toggle]]
   - [[#reveal-in-finder][Reveal in Finder]]
+  - [[#blamer][Blamer]]
 - [[#editing][Editing]]
   - [[#whitespace][Whitespace]]
   - [[#use-zap-up-to-char-instead-of-zap-to-char][Use zap-up-to-char instead of zap-to-char]]
@@ -733,6 +734,19 @@ https://github.com/kaz-yos/reveal-in-osx-finder
     (use-package reveal-in-osx-finder
       :bind
       (("C-c z" . #'reveal-in-osx-finder))))
+#+end_src
+
+** Blamer
+https://github.com/Artawower/blamer.el
+
+#+begin_src elisp
+  (use-package blamer
+    :bind
+    (("s-i" . blamer-show-posframe-commit-info))
+    :custom
+    (blamer-idle-time 0.5)
+    (blamer-min-offset 70)
+    (blamer-max-lines 10))
 #+end_src
 
 * Editing

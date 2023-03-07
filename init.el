@@ -333,6 +333,14 @@
     :bind
     (("C-c z" . #'reveal-in-osx-finder))))
 
+(use-package blamer
+  :bind
+  (("s-i" . blamer-show-posframe-commit-info))
+  :custom
+  (blamer-idle-time 0.5)
+  (blamer-min-offset 70)
+  (blamer-max-lines 10))
+
 (setq require-final-newline t)
 
 (setq-default indent-tabs-mode nil)
