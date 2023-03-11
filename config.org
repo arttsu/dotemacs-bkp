@@ -2035,7 +2035,10 @@ https://github.com/olavfosse/eradio
                             ("n5MD Radio" . "https://somafm.com/n5md130.pls")
                             ("Suburbs of Goa" . "https://somafm.com/suburbsofgoa130.pls")
                             ("The Trip" . "https://somafm.com/thetrip130.pls")
-                            ("Groove Salad" . "https://somafm.com/groovesalad130.pls")))
+                            ("Groove Salad" . "https://somafm.com/groovesalad130.pls")
+                            ("WFMU" . "https://wfmu.org/wfmu.pls")
+                            ("Rock'N'Soul" . "https://wfmu.org/wfmu_rock.pls")
+                            ("Give The Drummer Radio" . "https://wfmu.org/wfmu_drummer.pls")))
     (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
     :bind
     (("C-c r p" . #'eradio-play)
