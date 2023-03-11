@@ -1272,7 +1272,10 @@
   (setq eradio-channels '(("DEF CON - soma fm" . "https://somafm.com/defcon256.pls")
                           ("Deep Space One - soma fm" . "https://somafm.com/deepspaceone.pls")
                           ("BAGel Radio" . "http://ais-sa3.cdnstream1.com/2606_128.mp3")
-                          ("Christmas Rocks!" . "https://somafm.com/xmasrocks130.pls")))
+                          ("n5MD Radio" . "https://somafm.com/n5md130.pls")
+                          ("Suburbs of Goa" . "https://somafm.com/suburbsofgoa130.pls")
+                          ("The Trip" . "https://somafm.com/thetrip130.pls")
+                          ("Groove Salad" . "https://somafm.com/groovesalad130.pls")))
   (setq eradio-player '("mpv" "--no-video" "--no-terminal"))
   :bind
   (("C-c r p" . #'eradio-play)
